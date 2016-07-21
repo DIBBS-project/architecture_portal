@@ -58,3 +58,18 @@ def operations(request):
     operations_pairs = make_pairs(operations_list)
 
     return render(request, "operations_contributor.html", {"operations_pairs": operations_pairs})
+
+def clusters(request):
+    from rp_client.apis.cluster_definitions_api import ClusterDefinitionsApi
+
+
+    clusters_list = ClusterDefinitionsApi().clusters_get()
+
+    for cluster in clusters_list:
+        cluster.number_of_nodes = len(cluster.hosts_ips)
+        # appliance = cluster.appliance
+
+    # operations_pairs = make_pairs(operations_list)
+
+    return render(request, "clusters.html", {"clusters_list": clusters_list})
+

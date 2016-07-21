@@ -20,5 +20,6 @@ from contributor_app import views
 urlpatterns = [
     url(r'^$', views.operations, name='operations'),
     url(r'^operations/$', views.operations, name='operations'),
-    url(r'^appliances/$', views.appliances, name='appliances')
+    url(r'^appliances/$', views.appliances, name='appliances'),
+    url(r'^clusters/$', views.clusters, name='contributors_clusters')
 ]

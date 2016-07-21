@@ -44,12 +44,13 @@ class Clusters(object):
         self.swagger_types = {
             'id': 'int',
             'name': 'str',
-            'uuid': 'int',
+            'uuid': 'str',
             'public_key': 'str',
             'user_id': 'int',
             'site_id': 'datetime',
             'master_node_id': 'int',
-            'master_node_ip': 'int',
+            'master_node_ip': 'str',
+            'appliance': 'str',
             'hosts_ips': 'list[str]',
             'hosts_ids': 'list[str]'
         }
@@ -63,6 +64,7 @@ class Clusters(object):
             'site_id': 'site_id',
             'master_node_id': 'master_node_id',
             'master_node_ip': 'master_node_ip',
+            'appliance': 'appliance',
             'hosts_ips': 'hosts_ips',
             'hosts_ids': 'hosts_ids'
         }
@@ -75,6 +77,7 @@ class Clusters(object):
         self._site_id = None
         self._master_node_id = None
         self._master_node_ip = None
+        self._appliance = None
         self._hosts_ips = None
         self._hosts_ids = None
 
@@ -131,7 +134,7 @@ class Clusters(object):
         Internal UUID given to the cluster
 
         :return: The uuid of this Clusters.
-        :rtype: int
+        :rtype: str
         """
         return self._uuid
 
@@ -142,7 +145,7 @@ class Clusters(object):
         Internal UUID given to the cluster
 
         :param uuid: The uuid of this Clusters.
-        :type: int
+        :type: str
         """
         
         self._uuid = uuid
@@ -246,7 +249,7 @@ class Clusters(object):
         IP address of the master node of the cluster (can be null)
 
         :return: The master_node_ip of this Clusters.
-        :rtype: int
+        :rtype: str
         """
         return self._master_node_ip
 
@@ -257,10 +260,33 @@ class Clusters(object):
         IP address of the master node of the cluster (can be null)
 
         :param master_node_ip: The master_node_ip of this Clusters.
-        :type: int
+        :type: str
         """
         
         self._master_node_ip = master_node_ip
+
+    @property
+    def appliance(self):
+        """
+        Gets the appliance of this Clusters.
+        Appliance used
+
+        :return: The appliance of this Clusters.
+        :rtype: str
+        """
+        return self._appliance
+
+    @appliance.setter
+    def appliance(self, appliance):
+        """
+        Sets the appliance of this Clusters.
+        Appliance used
+
+        :param appliance: The appliance of this Clusters.
+        :type: str
+        """
+        
+        self._appliance = appliance
 
     @property
     def hosts_ips(self):
