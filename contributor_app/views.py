@@ -58,3 +58,16 @@ def operations(request):
     operations_pairs = make_pairs(operations_list)
 
     return render(request, "operations_contributor.html", {"operations_pairs": operations_pairs})
+
+
+def operation_form(request):
+    from ar_client.apis.appliances_api import AppliancesApi
+
+    appliances_list = AppliancesApi().appliances_get()
+
+    return render(request, "operation_form.html", {"appliances": appliances_list})
+
+
+def operation_post(request):
+    print ("post")
+    pass

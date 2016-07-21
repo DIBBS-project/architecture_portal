@@ -4,10 +4,10 @@
 {% block navbar_title %}DIBBS Portal - Community User{% endblock %}
 
 {% block navbar_links %}
-    <a href="/enduser/operations/">Switch to End User</a>
+    <a href="{% url 'enduser_operations' %}">Switch to End User</a>
 {% endblock %}
 
 {% block sidebar_links %}
-    <a href="/contributor/operations/"><i class="glyphicon glyphicon-th"></i> Operations</a>
-    <a href="/contributor/appliances/"><i class="glyphicon glyphicon-th"></i> Appliances</a>
+    <a href="{% url 'contributor_operations' %}"><i class="glyphicon glyphicon-th"></i> Operations</a>
+    <a href="{% url 'contributor_appliances' %}"><i class="glyphicon glyphicon-th"></i> Appliances</a>
 {% endblock %}
