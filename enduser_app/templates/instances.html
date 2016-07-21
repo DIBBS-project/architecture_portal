@@ -54,7 +54,7 @@
 
         <ul class="nav navbar-top-links navbar-right">
             <li class="button">
-                <a href="operations_community.html">Switch to Community User</a>
+                <a href="/contributor/operations/">Switch to Community User</a>
                 <!-- /.dropdown-user -->
             </li>
             <li class="dropdown">
@@ -93,10 +93,15 @@
 
     <!-- Page Content -->
     <div id="page-wrapper">
-        <h1>Instances</h1>
-        <hr/>
         <div class="container-fluid">
 
+            {% if operation_id %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-info" role="alert"><strong>Info:</strong> Only shows the instances of operation #{{ operation_id }}.</div>
+                    </div>
+                </div>
+            {% endif %}
             {% for operations_pair in operations_pairs %}
                 <div class="row">
                     {% if operations_pair.first %}
@@ -124,8 +129,8 @@
                                 </div>
                                 <div class="panel-footer clearfix">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-xs" href="operation_detail.html">
-                                            <i class="glyphicon glyphicon-triangle-bottom"></i> Create an execution
+                                        <a class="btn btn-default btn-xs" href="#">
+                                            <i class="glyphicon glyphicon-plus"></i> Create execution
                                         </a>
                                     </div>
                                 </div>
@@ -160,8 +165,8 @@
                                 </div>
                                 <div class="panel-footer clearfix">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-xs" href="operation_detail.html">
-                                            <i class="glyphicon glyphicon-triangle-bottom"></i> Create an execution
+                                        <a class="btn btn-default btn-xs" href="#">
+                                            <i class="glyphicon glyphicon-plus"></i> Create execution
                                         </a>
                                     </div>
                                 </div>

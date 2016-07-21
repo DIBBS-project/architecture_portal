@@ -55,7 +55,27 @@ def instances(request):
 
     instances_pairs = make_pairs(instances_list)
 
-    return render(request, "instances.html", {"operations_pairs": instances_pairs})
+    return render(request, "instances.html", {"operations_pairs": instances_pairs, "operation_id": None})
+
+
+def instances_operation(request, operation_id):
+    from pd_client.apis.process_instances_api import ProcessInstancesApi
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+
+    # The parameters parsed from a URL are given as strings
+    operation_id = int(operation_id)
+
+    instances_list = ProcessInstancesApi().process_instances_get()
+    instances_list_operation = []
+    for instance in instances_list:
+        if instance.process_definition_id == operation_id:
+            process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+            instance.process = process
+            instances_list_operation.append(instance)
+
+    instances_pairs = make_pairs(instances_list_operation)
+
+    return render(request, "instances.html", {"operations_pairs": instances_pairs, "operation_id": operation_id})
 
 
 def executions(request):
