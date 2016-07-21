@@ -42,7 +42,7 @@
                         <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.first.id }}/">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
-                        <a class="btn btn-default btn-xs" href="#">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}">
                             <i class="glyphicon glyphicon-plus"></i> Create instance
                         </a>
                     </div>
@@ -90,7 +90,7 @@
                         <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.second.id }}/">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
-                        <a class="btn btn-default btn-xs" href="#">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}">
                             <i class="glyphicon glyphicon-plus"></i> Create instance
                         </a>
                     </div>
