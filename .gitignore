@@ -3,6 +3,7 @@ tmp
 .idea
 db.sqlite3
 ap_app/migrations
+*.pyc
 
 # MAC OS
 
