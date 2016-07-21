@@ -20,6 +20,14 @@ def make_pairs(original_list):
     return pairs
 
 
+def make_keyval_pairs(original_dictionary):
+    keyval_pairs = []
+    for key, val in original_dictionary.items():
+        keyval_pairs.append({"key": key, "val": val})
+
+    return keyval_pairs
+
+
 def appliances(request):
     from ar_client.apis.appliances_api import AppliancesApi
     from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
@@ -41,13 +49,20 @@ def appliances(request):
 def operations(request):
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
     from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+    import json
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
+
     for ope in operations_list:
         impl = ProcessImplementationsApi().processimpls_id_get(id=ope.implementations[0])
-
+        impl.environment = make_keyval_pairs(json.loads(impl.environment))
+        impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
+        impl.argv = json.loads(impl.argv)
         ope.implementation = impl
 
-    operations_pairs = make_pairs()
+        ope.string_parameters = json.loads(ope.string_parameters)
+        ope.file_parameters = json.loads(ope.file_parameters)
+
+    operations_pairs = make_pairs(operations_list)
 
     return render(request, "operations.html", {"operations_pairs": operations_pairs})
