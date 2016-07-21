@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^$', views.operations, name='contributor_index'),
     url(r'^operations/$', views.operations, name='contributor_operations'),
     url(r'^appliances/$', views.appliances, name='contributor_appliances'),
-    url(r'^clusters/$', views.clusters, name='contributor_clusters')
+    url(r'^clusters/$', views.clusters, name='contributor_clusters'),
+    url(r'^operation_form/$', views.operation_form, name='contributor_operation_form'),
+    url(r'^operation_post/$', views.operation_post, name='contributor_operation_post'),
 ]
