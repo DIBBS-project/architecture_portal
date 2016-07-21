@@ -57,4 +57,4 @@ def operations(request):
 
     operations_pairs = make_pairs(operations_list)
 
-    return render(request, "operations.html", {"operations_pairs": operations_pairs})
+    return render(request, "operations_contributor.html", {"operations_pairs": operations_pairs})
