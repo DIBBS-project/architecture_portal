@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
-                                    <p>{{ pair.first.description }}</p>
+                                    <p>{% if pair.first.description %}{{ pair.first.description }}{% else %}No description provided.{% endif %}</p>
                                     {% if pair.first.string_parameters %}
                                     <h3>String parameters</h3>
                                     <ul>
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
-                                    <p>{{ pair.second.description }}</p>
+                                    <p>{% if pair.second.description %}{{ pair.second.description }}{% else %}No description provided.{% endif %}</p>
                                     {% if pair.second.string_parameters %}
                                     <h3>String parameters</h3>
                                     <ul>
