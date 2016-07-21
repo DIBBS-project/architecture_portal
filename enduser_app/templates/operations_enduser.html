@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,19 +13,19 @@
     <title>DIBBS interface - Operations</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="{% static "bower_components/metisMenu/dist/metisMenu.min.css" %}" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="{% static "dist/css/sb-admin-2.css" %}" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static "bower_components/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
 
     <!-- Portal CSS -->
-    <link href="css/portal.css" rel="stylesheet">
+    <link href="{% static "css/portal.css" %}" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,13 +49,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">DIBBS Portal - Community User</a>
+                <a class="navbar-brand" href="#">DIBBS Portal - End User</a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="button">
-                    <a href="operations_end.html">Switch to End User</a>
+                    <a href="operations_community.html">Switch to Community User</a>
                     <!-- /.dropdown-user -->
                 </li>
                 <li class="dropdown">
@@ -80,8 +81,9 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="operations_community.html"><i class="glyphicon glyphicon-th"></i> Operations</a>
-                            <a href="appliances.html"><i class="glyphicon glyphicon-th"></i> Appliances</a>
+                            <a href="operations_end.html"><i class="glyphicon glyphicon-th"></i> Operations</a>
+                            <a href="instances.html"><i class="glyphicon glyphicon-th"></i> Instances</a>
+                            <a href="executions.html"><i class="glyphicon glyphicon-th-list"></i> Executions</a>
                         </li>
                     </ul>
                 </div>
@@ -92,16 +94,86 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
-            <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
-                <div class="portal-toolbar-content">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add operation</button>
-                    </div>
-                </div>
-            </div>
-            <div class="portal-toolbar-after"></div>
             <div class="container-fluid">
-                {% for pair in appliances_pairs %}
+                <div class="row">
+                <h1>Operations</h1>
+                <hr/>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default portal-panel">
+                            <div class="panel-body">
+                                <div class="portal-panel-header">
+                                    <div class="portal-panel-image portal-image-placeholder"></div>
+                                    <div class="portal-panel-header-text">
+                                      <h2>UrbanFlow</h2>
+                                      <p>
+                                          <span>Based on <a>Hadoop</a></span><br/>
+                                          <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
+                                      </p>                                      
+                                    </div>
+                                </div>
+                                <div class="portal-panel-content">
+                                    <h3>Description</h3>
+                                    <p>UrbanFlow blablabla</p>
+                                    <p>UrbanFlow blablabla</p>
+                                    <p>UrbanFlow blablabla</p>
+                                    <p>UrbanFlow blablabla</p>
+                                    <h3>File parameters</h3>
+                                    <ul>
+                                        <li>input_data</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-footer clearfix">
+                                <div class="btn-group pull-right">
+                                    <a class="btn btn-default btn-xs" href="operation_detail.html">
+                                        <i class="glyphicon glyphicon-triangle-bottom"></i> Create an instance
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-lg-6 -->
+                    <div class="col-lg-6">
+                        <div class="panel panel-default portal-panel">
+                            <div class="panel-body">
+                                <div class="portal-panel-header">
+                                    <div class="portal-panel-image portal-image-placeholder"></div>
+                                    <div class="portal-panel-header-text">
+                                      <h2>TopoLens</h2>
+                                      <p>
+                                        <span>Based on <a>Hadoop</a></span><br/>
+                                        <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">topographic</span> (v1.1)</span> -->
+                                      </p>
+                                    </div>
+                                </div>
+                                <div class="portal-panel-content">
+                                    <h3>Description</h3>
+                                    <p>TopoLens blablabla</p>
+                                    <p>TopoLens blablabla</p>
+                                    <p>TopoLens blablabla</p>
+                                    <h3>String parameters</h3>
+                                    <ul>
+                                        <li>param1</li>
+                                        <li>param2</li>
+                                    </ul>
+                                    <h3>File parameters</h3>
+                                    <ul>
+                                        <li>input_data</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-footer clearfix">
+                                <div class="btn-group pull-right">
+                                    <a class="btn btn-default btn-xs" href="operation_detail.html">
+                                        <i class="glyphicon glyphicon-triangle-bottom"></i> Create an instance
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-lg-6 -->
+                </div>
+                <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="panel panel-default portal-panel">
@@ -109,93 +181,39 @@
                                 <div class="portal-panel-header">
                                     <div class="portal-panel-image portal-image-placeholder"></div>
                                     <div class="portal-panel-header-text">
-                                        <h2>{{ pair.first.name }}</h2>
-                                        <p>
-                                          <span>Based on <a>{{ pair.first.implementation.appliance }}</a></span><br/>
-                                          <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
-                                        </p>
+                                      <h2>line_counter</h2>
+                                      <p>
+                                        <span>Based on <a>Hadoop</a></span><br/>
+                                        <!-- <span><span class="label label-primary">Hadoop</span> <span class="label label-primary">example</span> (v0.1)</span> -->
+                                      </p>
                                     </div>
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
-                                    <p>{{ pair.first.description }}</p>
-                                    {% if pair.first.string_parameters %}
+                                    <p>line_counter blablabla</p>
+                                    <p>line_counter blablabla</p>
                                     <h3>String parameters</h3>
                                     <ul>
-                                        {% for sparam in pair.first.string_parameters %}
-                                        <li>{{ sparam }}</li>
-                                        {% endfor %}
+                                        <li>env3</li>
                                     </ul>
-                                    {% endif %}
-                                    {% if pair.first.file_parameters %}
                                     <h3>File parameters</h3>
                                     <ul>
-                                        {% for fparam in pair.first.file_parameters %}
-                                        <li>{{ fparam }}</li>
-                                        {% endfor %}
+                                        <li>input_file</li>
                                     </ul>
-                                    {% endif %}
                                 </div>
                             </div>
                             <div class="panel-footer clearfix">
                                 <div class="btn-group pull-right">
                                     <a class="btn btn-default btn-xs" href="operation_detail.html">
-                                        <i class="glyphicon glyphicon-eye-open"></i> Show details
+                                        <i class="glyphicon glyphicon-triangle-bottom"></i> Create an instance
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- /.col-lg-6 -->
-                    {% if pair.second %}
-                    <div class="col-lg-6">
-                        <div class="panel panel-default portal-panel">
-                            <div class="panel-body">
-                                <div class="portal-panel-header">
-                                    <div class="portal-panel-image portal-image-placeholder"></div>
-                                    <div class="portal-panel-header-text">
-                                        <h2>{{ pair.second.name }}</h2>
-                                        <p>
-                                          <span>Based on <a>{{ pair.second.implementation.appliance }}</a></span><br/>
-                                          <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="portal-panel-content">
-                                    <h3>Description</h3>
-                                    <p>{{ pair.second.description }}</p>
-                                    {% if pair.second.string_parameters %}
-                                    <h3>String parameters</h3>
-                                    <ul>
-                                        {% for sparam in pair.second.string_parameters %}
-                                        <li>{{ sparam }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                    {% if pair.second.file_parameters %}
-                                    <h3>File parameters</h3>
-                                    <ul>
-                                        {% for fparam in pair.second.file_parameters %}
-                                        <li>{{ fparam }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="panel-footer clearfix">
-                                <div class="btn-group pull-right">
-                                    <a class="btn btn-default btn-xs" href="operation_detail.html">
-                                        <i class="glyphicon glyphicon-eye-open"></i> Show details
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.col-lg-6 -->
-                    {% endif %}
                 </div>
                 <!-- /.row -->
-                {% endfor %}
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -205,16 +223,16 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{% static "bower_components/jquery/dist/jquery.min.js" %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{% static "bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="{% static "bower_components/metisMenu/dist/metisMenu.min.js" %}"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="dist/js/sb-admin-2.js"></script>
+    <script src="{% static "dist/js/sb-admin-2.js" %}"></script>
 
     <script>
         $(document).ready(function() {

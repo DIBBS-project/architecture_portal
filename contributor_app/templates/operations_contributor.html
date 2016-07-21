@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>DIBBS interface - Appliances</title>
+    <title>DIBBS interface - Operations</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
@@ -96,13 +96,13 @@
             <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
                 <div class="portal-toolbar-content">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add appliance</button>
+                        <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add operation</button>
                     </div>
                 </div>
             </div>
             <div class="portal-toolbar-after"></div>
             <div class="container-fluid">
-                {% for pair in appliances_pairs %}
+                {% for pair in operations_pairs %}
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="panel panel-default portal-panel">
@@ -111,20 +111,38 @@
                                     <div class="portal-panel-image portal-image-placeholder"></div>
                                     <div class="portal-panel-header-text">
                                         <h2>{{ pair.first.name }}</h2>
-                                        <!-- <p>Appliance</p> -->
+                                        <p>
+                                          <span>Based on <a>{{ pair.first.implementation.appliance }}</a></span><br/>
+                                          <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
                                     <p>{{ pair.first.description }}</p>
+                                    {% if pair.first.string_parameters %}
+                                    <h3>String parameters</h3>
+                                    <ul>
+                                        {% for sparam in pair.first.string_parameters %}
+                                        <li>{{ sparam }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% if pair.first.file_parameters %}
+                                    <h3>File parameters</h3>
+                                    <ul>
+                                        {% for fparam in pair.first.file_parameters %}
+                                        <li>{{ fparam }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="panel-footer clearfix">
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-default btn-xs" data-toggle="popover" data-placement="auto right" data-html="true" title='Implementations<div class="btn-group pull-right"><button type="button" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-plus"></i> Add</button>'
-                                        data-content='{% for impl in pair.first.implementations %}<a href="#"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
-                                        <i class="glyphicon glyphicon-th-list"></i> Show implementations
-                                    </button>
+                                    <a class="btn btn-default btn-xs" href="operation_detail.html">
+                                        <i class="glyphicon glyphicon-eye-open"></i> Show details
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -138,20 +156,38 @@
                                     <div class="portal-panel-image portal-image-placeholder"></div>
                                     <div class="portal-panel-header-text">
                                         <h2>{{ pair.second.name }}</h2>
-                                        <!-- <p>Appliance</p> -->
+                                        <p>
+                                          <span>Based on <a>{{ pair.second.implementation.appliance }}</a></span><br/>
+                                          <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
                                     <p>{{ pair.second.description }}</p>
+                                    {% if pair.second.string_parameters %}
+                                    <h3>String parameters</h3>
+                                    <ul>
+                                        {% for sparam in pair.second.string_parameters %}
+                                        <li>{{ sparam }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% if pair.second.file_parameters %}
+                                    <h3>File parameters</h3>
+                                    <ul>
+                                        {% for fparam in pair.second.file_parameters %}
+                                        <li>{{ fparam }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="panel-footer clearfix">
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-default btn-xs" data-toggle="popover" data-placement="auto right" data-html="true" title='Implementations<div class="btn-group pull-right"><button type="button" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-plus"></i> Add</button>'
-                                        data-content='{% for impl in pair.second.implementations %}<a href="#"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
-                                        <i class="glyphicon glyphicon-th-list"></i> Show implementations
-                                    </button>
+                                    <a class="btn btn-default btn-xs" href="operation_detail.html">
+                                        <i class="glyphicon glyphicon-eye-open"></i> Show details
+                                    </a>
                                 </div>
                             </div>
                         </div>

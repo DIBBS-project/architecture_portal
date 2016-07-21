@@ -1,22 +1,14 @@
 from django.shortcuts import render
 
 
-class Pair:
-    def __init__(self):
-        self.first = None
-        self.second = None
-
-
 def make_pairs(original_list):
     pairs = []
 
     for i in range(0, len(original_list), 2):
-        pair = Pair()
-        pair.first = original_list[i]
-        if i+1 < len(original_list):
-            pair.second = original_list[i+1]
-            pairs.append(pair)
-
+        pair = dict()
+        pair["first"] = original_list[i]
+        pair["second"] = original_list[i+1] if i+1 < len(original_list) else None
+        pairs.append(pair)
     return pairs
 
 

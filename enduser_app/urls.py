@@ -18,6 +18,8 @@ from django.conf.urls import url
 from enduser_app import views
 
 urlpatterns = [
-    # url(r'^$', views.operations, name='operations'),
+    url(r'^$', views.operations, name='operations'),
+    url(r'^operations/$', views.operations, name='operations'),
     url(r'^instances/$', views.instances, name='instances'),
+
 ]
