@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-
+from django.core import serializers
+import requests
 
 def make_pairs(original_list):
     pairs = []
@@ -74,3 +76,28 @@ def instances_operation(request, operation_id):
     instances_pairs = make_pairs(instances_list_operation)
 
     return render(request, "instances.html", {"operations_pairs": instances_pairs, "operation_id": operation_id})
+
+
+def executions(request):
+    from pd_client.apis.process_instances_api import ProcessInstancesApi
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from pd_client.apis.executions_api import ExecutionsApi
+
+    executions_list = ExecutionsApi().executions_get()
+    for execution in executions_list:
+        instance = ProcessInstancesApi().process_instances_id_get(execution.process_instance)
+        process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+        execution.instance = instance
+        instance.process = process
+
+    return render(request, "executions.html", {"executions_list": executions_list})
+
+
+def run_execution(request, execution_id):
+    import settings as global_settings
+
+    run_process_url = "%s/exec/%s/run/" % (global_settings.Settings().process_dispatcher_url, execution_id)
+    requests.get(run_process_url)
+
+    data = serializers.serialize('json', {"status": "running"})
+    return HttpResponse(data, content_type='application/json')

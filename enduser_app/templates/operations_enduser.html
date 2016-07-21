@@ -81,9 +81,9 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="/enduser/operations/"><i class="glyphicon glyphicon-th"></i> Operations</a>
-                            <a href="/enduser/instances/"><i class="glyphicon glyphicon-th"></i> Instances</a>
-                            <a href="/enduser/executions/"><i class="glyphicon glyphicon-th-list"></i> Executions</a>
+                            <a href="{% url 'enduser_operations'%}"><i class="glyphicon glyphicon-th"></i> Operations</a>
+                            <a href="{% url 'enduser_instances'%}"><i class="glyphicon glyphicon-th"></i> Instances</a>
+                            <a href="{% url 'enduser_executions'%}"><i class="glyphicon glyphicon-th-list"></i> Executions</a>
                         </li>
                     </ul>
                 </div>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
-                                    <p>{{ pair.first.description }}</p>
+                                    <p>{% if pair.first.description %}{{ pair.first.description }}{% else %}No description provided.{% endif %}</p>
                                     {% if pair.first.string_parameters %}
                                     <h3>String parameters</h3>
                                     <ul>
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="portal-panel-content">
                                     <h3>Description</h3>
-                                    <p>{{ pair.second.description }}</p>
+                                    <p>{% if pair.second.description %}{{ pair.second.description }}{% else %}No description provided.{% endif %}</p>
                                     {% if pair.second.string_parameters %}
                                     <h3>String parameters</h3>
                                     <ul>
