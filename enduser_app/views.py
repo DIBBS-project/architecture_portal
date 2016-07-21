@@ -44,8 +44,13 @@ def operations(request):
 
 def instances(request):
     from pd_client.apis.process_instances_api import ProcessInstancesApi
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
 
     instances_list = ProcessInstancesApi().process_instances_get()
+    for instance in instances_list:
+        process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+        instance.process = process
+
     instances_pairs = make_pairs(instances_list)
 
     return render(request, "instances.html", {"operations_pairs": instances_pairs})
