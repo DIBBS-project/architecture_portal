@@ -1,0 +1,95 @@
+a, a:hover, a:active, a:focus, a:visited {
+    text-decoration: none;
+}
+
+.portal-toolbar {
+    background: #ddd;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 42px;
+}
+
+.portal-toolbar .portal-toolbar-content {
+    position: absolute;
+    right: 16px;
+}
+
+.portal-toolbar-after {
+    height: 42px;
+}
+
+.container-fluid {
+  padding-top: 12px;
+}
+
+.portal-panel {
+}
+
+.portal-image-placeholder {
+    background: #ccc;
+}
+
+.portal-panel .portal-panel-header {
+}
+
+.portal-panel .portal-panel-header .portal-panel-image {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+    width: 140px;
+    height: 80px;
+}
+
+.portal-panel .portal-panel-header .portal-panel-header-text {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.portal-panel h2 {
+    margin: 0;
+    vertical-align: middle;
+    font-size: 24px;
+}
+
+.portal-panel h3 {
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.portal-panel .panel-footer {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.portal-panel .panel-footer .popover {
+    width: 276px;
+    height: 250px;
+}
+
+.portal-panel .panel-footer .popover .popover-content {
+    padding: 0;
+}
+
+.portal-panel .panel-footer .popover .popover-content a {
+    display: block;
+    padding: 4px;
+    height: 48px;
+    border-bottom: 1px solid #ddd;
+}
+
+.portal-panel .panel-footer .popover .popover-title button {
+    position: relative;
+    top: -2px;
+}
+
+.portal-panel .panel-footer .popover .popover-content a .portal-popover-image {
+    display: inline-block;
+    padding: 4px;
+    height: 40px;
+    width: 76px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
