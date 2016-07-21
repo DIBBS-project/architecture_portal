@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^$', views.operations, name='operations'),
     url(r'^operations/$', views.operations, name='operations'),
     url(r'^instances/$', views.instances, name='instances'),
+    url(r'^instances/foroperation/(?P<operation_id>[0-9]+)/$', views.instances_operation, name='instances_operation'),
 
 ]
