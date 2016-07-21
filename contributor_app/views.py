@@ -20,6 +20,11 @@ def make_keyval_pairs(original_dictionary):
     return keyval_pairs
 
 
+def index(request):
+    from django.shortcuts import redirect
+    return redirect('contributor_operations')
+
+
 def appliances(request):
     from ar_client.apis.appliances_api import AppliancesApi
     from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi

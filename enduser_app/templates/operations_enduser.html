@@ -42,7 +42,7 @@
                         <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.first.id }}/">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
-                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}?default_operation={{ pair.first.id }}">
                             <i class="glyphicon glyphicon-plus"></i> Create instance
                         </a>
                     </div>
@@ -59,8 +59,8 @@
                         <div class="portal-panel-header-text">
                             <h2>{{ pair.second.name }}</h2>
                             <p>
-                              <span>Based on <a>{{ pair.second.implementation.appliance }}</a></span><br/>
-                              <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
+                                <span>Based on <a>{{ pair.second.implementation.appliance }}</a></span><br/>
+                                <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
                             </p>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                         <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.second.id }}/">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
-                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}?default_operation={{ pair.second.id }}">
                             <i class="glyphicon glyphicon-plus"></i> Create instance
                         </a>
                     </div>

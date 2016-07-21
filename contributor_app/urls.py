@@ -18,7 +18,7 @@ from django.conf.urls import url
 from contributor_app import views
 
 urlpatterns = [
-    url(r'^$', views.operations, name='contributor_index'),
+    url(r'^$', views.index, name='contributor_index'),
     url(r'^operations/$', views.operations, name='contributor_operations'),
     url(r'^appliances/$', views.appliances, name='contributor_appliances'),
     url(r'^clusters/$', views.clusters, name='contributor_clusters'),

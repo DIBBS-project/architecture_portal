@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core import serializers
 import requests
 
+
 def make_pairs(original_list):
     pairs = []
 
@@ -20,6 +21,11 @@ def make_keyval_pairs(original_dictionary):
         keyval_pairs.append({"key": key, "val": val})
 
     return keyval_pairs
+
+
+def index(request):
+    from django.shortcuts import redirect
+    return redirect('enduser_operations')
 
 
 def operations(request):
@@ -108,4 +114,7 @@ def instance_form(request):
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
 
-    return render(request, "instance_form.html", {"operations": operations_list})
+    default_operation = int(request.GET.get('default_operation'))
+
+    return render(request, "instance_form.html", {"operations": operations_list,
+                                                  "default_operation": default_operation})

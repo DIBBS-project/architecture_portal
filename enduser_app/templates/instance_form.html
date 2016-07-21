@@ -7,7 +7,7 @@
             <label for="process_definition_id">Operation ID:</label>
             <select class="form-control" name="process_definition_id" id="process_definition_id" required>
                 {% for operation in operations %}
-                    <option value="{{ operation.id }}">#{{ operation.id }} - {{ operation.name }}</option>
+                    <option value="{{ operation.id }}" {% if operation.id == default_operation %} selected {% endif %}>#{{ operation.id }} - {{ operation.name }}</option>
                 {% endfor %}
             </select>
         </div>
