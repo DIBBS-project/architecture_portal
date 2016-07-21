@@ -1,0 +1,28 @@
+{% extends "base_enduser.html" %}
+
+{% block content %}
+    <form role="form" action="{% url 'contributor_operation_post' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="process_definition_id">Operation ID:</label>
+            <select class="form-control" name="process_definition_id" id="process_definition_id" required>
+                {% for operation in operations %}
+                    <option value="{{ operation.id }}">#{{ operation.id }} - {{ operation.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">Name (optional):</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="parameters">Parameters (JSON dictionary):</label>
+            <textarea class="form-control" rows="5" cols="50" id="parameters" name="parameters" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="files">Files (JSON dictionary):</label>
+            <textarea class="form-control" rows="5" cols="50" id="files" name="files" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}

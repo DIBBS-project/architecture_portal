@@ -101,3 +101,11 @@ def run_execution(request, execution_id):
 
     data = serializers.serialize('json', {"status": "running"})
     return HttpResponse(data, content_type='application/json')
+
+
+def instance_form(request):
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+
+    operations_list = ProcessDefinitionsApi().processdefs_get()
+
+    return render(request, "instance_form.html", {"operations": operations_list})

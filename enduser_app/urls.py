@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^instances/foroperation/(?P<operation_id>[0-9]+)/$', views.instances_operation, name='enduser_instances_operation'),
     url(r'^executions/$', views.executions, name='enduser_executions'),
     url(r'^run_execution/(?P<execution_id>[0-9]+)/$', views.run_execution, name='enduser_run_execution'),
+    url(r'^instance_form/$', views.instance_form, name='enduser_instance_form'),
 ]
