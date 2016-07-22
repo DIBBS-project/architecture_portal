@@ -1,0 +1,16 @@
+{% extends "base_contributor.html" %}
+
+{% block content %}
+    <form role="form" action="{% url 'contributor_appliance_post' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description (optional):</label>
+            <textarea class="form-control" rows="5" cols="50" id="description" name="description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}

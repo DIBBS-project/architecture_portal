@@ -50,7 +50,7 @@ def operations(request):
     return render(request, "operations_enduser.html", {"operations_pairs": operations_pairs})
 
 
-def instances(request):
+def instances(request, message_success=None):
     from pd_client.apis.process_instances_api import ProcessInstancesApi
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
 
@@ -61,7 +61,8 @@ def instances(request):
 
     instances_pairs = make_pairs(instances_list)
 
-    return render(request, "instances.html", {"operations_pairs": instances_pairs, "operation_id": None})
+    return render(request, "instances.html", {"operations_pairs": instances_pairs,
+                                              "message_success": message_success})
 
 
 def instances_operation(request, operation_id):
@@ -84,7 +85,7 @@ def instances_operation(request, operation_id):
     return render(request, "instances.html", {"operations_pairs": instances_pairs, "operation_id": operation_id})
 
 
-def executions(request):
+def executions(request, message_success=None):
     from pd_client.apis.process_instances_api import ProcessInstancesApi
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
     from pd_client.apis.executions_api import ExecutionsApi
@@ -96,7 +97,8 @@ def executions(request):
         execution.instance = instance
         instance.process = process
 
-    return render(request, "executions.html", {"executions_list": executions_list})
+    return render(request, "executions.html", {"executions_list": executions_list,
+                                               "message_success": message_success})
 
 
 def run_execution(request, execution_id):
@@ -109,12 +111,84 @@ def run_execution(request, execution_id):
     return HttpResponse(data, content_type='application/json')
 
 
-def instance_form(request):
+def instance_form(request, message_error=None):
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
 
-    default_operation = int(request.GET.get('default_operation'))
+    if request.GET.get('default_operation'):
+        default_operation = int(request.GET.get('default_operation'))
+    else:
+        default_operation = None
 
     return render(request, "instance_form.html", {"operations": operations_list,
-                                                  "default_operation": default_operation})
+                                                  "default_operation": default_operation,
+                                                  "message_error": message_error})
+
+
+def instance_post(request):
+    from pd_client.apis.process_instances_api import ProcessInstancesApi
+    from pd_client.configure import configure_auth_basic
+
+    operation_id = request.POST.get('operation_id')
+    name = request.POST.get('name')
+    parameters = request.POST.get('parameters')
+    files = request.POST.get('files')
+
+    request_data = {
+        "name": name,
+        "process_definition_id": operation_id,
+        "parameters": parameters,
+        "files": files
+    }
+
+    configure_auth_basic("admin", "pass")
+    try:
+        ret = ProcessInstancesApi().process_instances_post(data=request_data)
+        instance_id = ret.id
+        return instances(request, message_success="Successfully created instance #" + str(instance_id) + ".")
+    except Exception as e:
+        return instance_form(request, message_error="Error creating the instance: " + str(e))
+
+
+def execution_form(request, message_error=None):
+    from pd_client.apis.process_instances_api import ProcessInstancesApi
+
+    instances_list = ProcessInstancesApi().process_instances_get()
+
+    if request.GET.get('default_instance'):
+        default_instance = int(request.GET.get('default_instance'))
+    else:
+        default_instance = None
+
+    return render(request, "execution_form.html", {"instances": instances_list,
+                                                  "default_instance": default_instance,
+                                                  "message_error": message_error})
+
+
+def execution_post(request):
+    from pd_client.apis.executions_api import ExecutionsApi
+    from pd_client.configure import configure_auth_basic
+
+    operation_instance = request.POST.get('operation_instance')
+    resource_provisioner_token = request.POST.get('resource_provisioner_token')
+    callback_url = request.POST.get('callback_url')
+    force_spawn_cluster = request.POST.get('force_spawn_cluster')
+
+    request_data = {
+        "process_instance": operation_instance,
+        "resource_provisioner_token": resource_provisioner_token,
+        "callback_url": callback_url,
+    }
+
+    if force_spawn_cluster:
+        request_data["force_spawn_cluster"] = force_spawn_cluster
+
+    configure_auth_basic("admin", "pass")
+    try:
+        ret = ExecutionsApi().executions_post(data=request_data)
+        execution_id = ret.id
+        return executions(request, message_success="Successfully created execution #" + str(execution_id) + ".")
+    except Exception as e:
+        return execution_form(request, message_error="Error creating the execution: " + str(e))
+

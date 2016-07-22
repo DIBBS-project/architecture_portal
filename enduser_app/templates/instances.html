@@ -1,5 +1,16 @@
 {% extends "base_enduser.html" %}
 
+{% block toolbar %}
+    <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
+        <div class="portal-toolbar-content">
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="{% url 'enduser_instance_form' %}{% if operation_id %}?default_operation={{ operation_id }}{% endif %}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add instance</a>
+            </div>
+        </div>
+    </div>
+    <div class="portal-toolbar-after"></div>
+{% endblock %}
+
 {% block content %}
     {% if operation_id %}
         <div class="row">
@@ -21,6 +32,7 @@
 
                                     <p>
                                         <span>Instantiates <a>{{ operations_pair.first.process.name }}</a></span><br/>
+                                        <span>#{{ operations_pair.first.id }}</span>
                                         <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">topographic</span> (v1.1)</span> -->
                                     </p>
                                 </div>
@@ -35,7 +47,7 @@
                         </div>
                         <div class="panel-footer clearfix">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-default btn-xs" href="#">
+                                <a class="btn btn-default btn-xs" href="{% url 'enduser_execution_form' %}?default_instance={{ operations_pair.first.id }}">
                                     <i class="glyphicon glyphicon-plus"></i> Create execution
                                 </a>
                             </div>
@@ -57,6 +69,7 @@
 
                                     <p>
                                         <span>Instantiates <a>{{ operations_pair.second.process.name }}</a></span><br/>
+                                        <span>#{{ operations_pair.second.id }}</span>
                                         <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">topographic</span> (v1.1)</span> -->
                                     </p>
                                 </div>
@@ -71,7 +84,7 @@
                         </div>
                         <div class="panel-footer clearfix">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-default btn-xs" href="#">
+                                <a class="btn btn-default btn-xs" href="{% url 'enduser_execution_form' %}?default_instance={{ operations_pair.second.id }}">
                                     <i class="glyphicon glyphicon-plus"></i> Create execution
                                 </a>
                             </div>

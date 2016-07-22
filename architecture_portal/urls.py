@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from contributor_app import views as contributor_views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^contributor/', include('contributor_app.urls')),
-    url(r'^enduser/', include('enduser_app.urls'))
+    url(r'^enduser/', include('enduser_app.urls')),
+    url(r'^$', contributor_views.index, name='index'),
 ]

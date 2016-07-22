@@ -1,47 +1,36 @@
 {% extends "base_contributor.html" %}
 
-{% block toolbar %}
-    <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
-        <div class="portal-toolbar-content">
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add operation</button>
-            </div>
-        </div>
-    </div>
-    <div class="portal-toolbar-after"></div>
-{% endblock %}
-
 {% block content %}
 <div class="row">
     <div class="panel panel-default">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Panel heading</div>
 
-    <!-- Table -->
-    <table class="table execution-table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Appliance</th>
-            <th>Number of executions</th>
-            <th>Number of nodes</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for cluster in clusters_list %}
-            <tr>
-                <td><b>{{ cluster.id }}</b></td>
-                <td>{{ cluster.name }}</td>
-                <td>{{ cluster.appliance }}</td>
-                <td>N.a.</td>
-                <td>{{ cluster.number_of_nodes }} <a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a></td>
-                <td>-</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table execution-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Appliance</th>
+                        <th>Number of executions</th>
+                        <th>Number of nodes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cluster in clusters_list %}
+                    <tr>
+                        <td><b>{{ cluster.id }}</b></td>
+                        <td>{{ cluster.name }}</td>
+                        <td>{{ cluster.appliance }}</td>
+                        <td>N.a.</td>
+                        <td>{{ cluster.number_of_nodes }} <a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a></td>
+                        <td>-</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

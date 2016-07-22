@@ -1,0 +1,34 @@
+{% extends "base_contributor.html" %}
+
+{% block content %}
+    <form role="form" action="{% url 'contributor_appliance_implementation_post' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="appliance">Appliance:</label>
+            <select class="form-control" name="appliance" id="appliance" required>
+                {% for appliance in appliances %}
+                {% if appliance.name != 'common' %}
+                    <option {% if appliance.name == default_appliance %} selected {% endif %}>{{ appliance.name }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="site">Site:</label>
+            <select class="form-control" name="site" id="site" required>
+                {% for site in sites %}
+                    <option>{{ site.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="image_name">Image name:</label>
+            <input type="text" class="form-control" id="image_name" name="image_name" required>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}

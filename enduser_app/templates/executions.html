@@ -1,5 +1,16 @@
 {% extends "base_enduser.html" %}
 
+{% block toolbar %}
+    <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
+        <div class="portal-toolbar-content">
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="{% url 'enduser_execution_form' %}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add execution</a>
+            </div>
+        </div>
+    </div>
+    <div class="portal-toolbar-after"></div>
+{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
@@ -24,7 +35,7 @@
                                 <td><b>{{ execution.id }}</b></td>
                                 <td>{{ execution.instance.name }}</td>
                                 <td>{{ execution.instance.process.name }}</td>
-                                <td>mchardet</td>
+                                <td>chardetm</td>
                                 <td>{{ execution.status }}</td>
                                 <td>{{ execution.status_info }}</td>
                                 {#                                <td><a href="#" class="btn btn-success btn-xs">View Results</a></td>#}

@@ -1,11 +1,11 @@
 {% extends "base_enduser.html" %}
 
 {% block content %}
-    <form role="form" action="{% url 'contributor_operation_post' %}" method="post">
+    <form role="form" action="{% url 'enduser_instance_post' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="process_definition_id">Operation ID:</label>
-            <select class="form-control" name="process_definition_id" id="process_definition_id" required>
+            <label for="operation_id">Operation ID:</label>
+            <select class="form-control" name="operation_id" id="operation_id" required>
                 {% for operation in operations %}
                     <option value="{{ operation.id }}" {% if operation.id == default_operation %} selected {% endif %}>#{{ operation.id }} - {{ operation.name }}</option>
                 {% endfor %}

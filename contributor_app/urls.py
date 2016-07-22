@@ -24,4 +24,10 @@ urlpatterns = [
     url(r'^clusters/$', views.clusters, name='contributor_clusters'),
     url(r'^operation_form/$', views.operation_form, name='contributor_operation_form'),
     url(r'^operation_post/$', views.operation_post, name='contributor_operation_post'),
+    url(r'^appliance_form/$', views.appliance_form, name='contributor_appliance_form'),
+    url(r'^appliance_post/$', views.appliance_post, name='contributor_appliance_post'),
+    url(r'^appliance_implementation_form/$',
+        views.appliance_implementation_form, name='contributor_appliance_implementation_form'),
+    url(r'^appliance_implementation_post/$',
+        views.appliance_implementation_post, name='contributor_appliance_implementation_post'),
 ]

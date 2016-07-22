@@ -80,9 +80,7 @@ a, a:hover, a:active, a:focus, a:visited {
     border-bottom: 1px solid #ddd;
 }
 
-.portal-panel .panel-footer .popover .popover-title button {
-    position: relative;
-    top: -2px;
+.portal-panel .panel-footer .popover .popover-title a {
 }
 
 .portal-panel .panel-footer .popover .popover-content a .portal-popover-image {

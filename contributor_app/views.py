@@ -25,7 +25,7 @@ def index(request):
     return redirect('contributor_operations')
 
 
-def appliances(request):
+def appliances(request, message_success=None):
     from ar_client.apis.appliances_api import AppliancesApi
     from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
 
@@ -40,7 +40,8 @@ def appliances(request):
 
     appliances_pairs = make_pairs(appliances_list)
 
-    return render(request, "appliances.html", {"appliances_pairs": appliances_pairs})
+    return render(request, "appliances.html", {"appliances_pairs": appliances_pairs,
+                                               "message_success": message_success})
 
 
 def operations(request):
@@ -91,3 +92,72 @@ def operation_form(request):
 def operation_post(request):
     print ("post")
     pass
+
+
+def appliance_form(request, message_error=None):
+
+    return render(request, "appliance_form.html", {"message_error": message_error})
+
+
+def appliance_post(request):
+    from ar_client.apis.appliances_api import AppliancesApi
+    from ar_client.configure import configure_auth_basic
+
+    name = request.POST.get('name')
+    description = request.POST.get('description')
+
+    request_data = {
+        "name": name,
+        "description": description,
+    }
+
+    configure_auth_basic("admin", "pass")
+    try:
+        ret = AppliancesApi().appliances_post(data=request_data)
+        appliance_name = ret.name
+        return appliances(request, message_success="Successfully created appliance '" + str(appliance_name) + "'.")
+    except Exception as e:
+        return appliance_form(request, message_error="Error creating the appliance: " + str(e))
+
+
+def appliance_implementation_form(request, message_error=None):
+    from ar_client.apis.appliances_api import AppliancesApi
+    from ar_client.apis.sites_api import SitesApi
+
+    appliances_list = AppliancesApi().appliances_get()
+    sites_list = SitesApi().sites_get()
+
+    default_appliance = request.GET.get('default_appliance')
+
+    return render(request, "appliance_implementation_form.html", {"appliances": appliances_list,
+                                                                  "sites": sites_list,
+                                                                  "default_appliance": default_appliance,
+                                                                  "message_error": message_error})
+
+
+def appliance_implementation_post(request):
+    from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
+    from ar_client.configure import configure_auth_basic
+
+    name = request.POST.get('name')
+    image_name = request.POST.get('image_name')
+    site = request.POST.get('site')
+    appliance = request.POST.get('appliance')
+
+    request_data = {
+        "name": name,
+        "image_name": image_name,
+        "site": site,
+        "appliance": appliance,
+    }
+
+    configure_auth_basic("admin", "pass")
+    try:
+        ret = ApplianceImplementationsApi().appliances_impl_post(data=request_data)
+        appliance_impl_name = ret.name
+        return appliances(
+            request,
+            message_success="Successfully created appliance implementation '" + str(appliance_impl_name) + "'."
+        )
+    except Exception as e:
+        return appliance_implementation_form(request, message_error="Error creating the appliance: " + str(e))

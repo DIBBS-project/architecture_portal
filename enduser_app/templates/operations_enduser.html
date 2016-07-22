@@ -11,7 +11,8 @@
                         <div class="portal-panel-header-text">
                             <h2>{{ pair.first.name }}</h2>
                             <p>
-                              <span>Based on <a>{{ pair.first.implementation.appliance }}</a></span><br/>
+                                <span>Based on <a>{{ pair.first.implementation.appliance }}</a></span><br/>
+                                <span>#{{ pair.first.id }}</span>
                               <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
                             </p>
                         </div>
@@ -60,6 +61,7 @@
                             <h2>{{ pair.second.name }}</h2>
                             <p>
                                 <span>Based on <a>{{ pair.second.implementation.appliance }}</a></span><br/>
+                                <span>#{{ pair.second.id }}</span>
                                 <!-- <span><span class="label label-primary">GIS</span> <span class="label label-primary">social</span> (v0.9)</span> -->
                             </p>
                         </div>

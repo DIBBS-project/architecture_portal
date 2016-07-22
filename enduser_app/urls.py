@@ -27,4 +27,7 @@ urlpatterns = [
     url(r'^run_execution/(?P<execution_id>[0-9]+)/$',
         views.run_execution, name='enduser_run_execution'),
     url(r'^instance_form/$', views.instance_form, name='enduser_instance_form'),
+    url(r'^instance_post/$', views.instance_post, name='enduser_instance_post'),
+    url(r'^execution_form/$', views.execution_form, name='enduser_execution_form'),
+    url(r'^execution_post/$', views.execution_post, name='enduser_execution_post'),
 ]
