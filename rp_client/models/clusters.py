@@ -269,7 +269,7 @@ class Clusters(object):
     def appliance(self):
         """
         Gets the appliance of this Clusters.
-        Appliance used
+        Appliance used (can be null)
 
         :return: The appliance of this Clusters.
         :rtype: str
@@ -280,7 +280,7 @@ class Clusters(object):
     def appliance(self, appliance):
         """
         Sets the appliance of this Clusters.
-        Appliance used
+        Appliance used (can be null)
 
         :param appliance: The appliance of this Clusters.
         :type: str
