@@ -289,6 +289,29 @@ class Clusters(object):
         self._master_node_ip = master_node_ip
 
     @property
+    def appliance(self):
+        """
+        Gets the appliance of this Clusters.
+        Appliance used (can be null)
+
+        :return: The appliance of this Clusters.
+        :rtype: str
+        """
+        return self._appliance
+
+    @appliance.setter
+    def appliance(self, appliance):
+        """
+        Sets the appliance of this Clusters.
+        Appliance used (can be null)
+
+        :param appliance: The appliance of this Clusters.
+        :type: str
+        """
+        
+        self._appliance = appliance
+
+    @property
     def hosts_ips(self):
         """
         Gets the hosts_ips of this Clusters.
