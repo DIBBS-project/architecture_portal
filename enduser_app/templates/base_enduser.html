@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
+{% block additional_head %}
+    <!-- Contributor CSS -->
+    <link href="{% static "css/enduser.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block title %}DIBBS Portal - End User{% endblock %}
 {% block navbar_title %}DIBBS Portal - End User{% endblock %}
 
 {% block navbar_links %}
-    <a href="{% url "contributor_index" %}">Switch to Community User</a>
+    <a href="{% url "contributor_index" %}">Switch to Community Contributor Portal</a>
 {% endblock %}
 
 {% block sidebar_links %}
     <a href="{% url 'enduser_operations' %}"><i class="glyphicon glyphicon-th"></i> Operations</a>
     <a href="{% url 'enduser_instances' %}"><i class="glyphicon glyphicon-th"></i> Instances</a>
-    <a href="{% url 'enduser_executions' %}"><i class="glyphicon glyphicon-th-list"></i> Executions</a>
+    <a href="{% url 'enduser_executions' %}"><i class="glyphicon glyphicon-th-list"></i> Operations Dashboard</a>
+    <a href="{% url "enduser_clusters" %}"><i class="glyphicon glyphicon-th"></i> Appliances Dashboard</a>
 {% endblock %}

@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}DIBBS Portal - Community User{% endblock %}
-{% block navbar_title %}DIBBS Portal - Community User{% endblock %}
+{% load staticfiles %}
+
+{% block additional_head %}
+    <!-- Contributor CSS -->
+    <link href="{% static "css/contributor.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}DIBBS Portal - Community Contributor{% endblock %}
+{% block navbar_title %}DIBBS Portal - Community Contributor{% endblock %}
 
 {% block navbar_links %}
-    <a href="{% url "enduser_index" %}">Switch to End User</a>
+    <a href="{% url "enduser_index" %}">Switch to End User Portal</a>
 {% endblock %}
 
 {% block sidebar_links %}
     <a href="{% url "contributor_operations" %}"><i class="glyphicon glyphicon-th"></i> Operations</a>
     <a href="{% url "contributor_appliances" %}"><i class="glyphicon glyphicon-th"></i> Appliances</a>
-    <a href="{% url "contributor_clusters" %}"><i class="glyphicon glyphicon-th"></i> Clusters</a>
 {% endblock %}

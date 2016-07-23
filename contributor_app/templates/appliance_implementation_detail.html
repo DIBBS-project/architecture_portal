@@ -1,0 +1,16 @@
+{% extends "base_contributor.html" %}
+
+{% block navbar_title %}{{ block.super }} >> Appliance Implementation{% endblock %}
+
+{% block content %}
+    <div class="portal_details">
+        <h2>Name:</h2>
+        <p>{{ appliance_impl.name }}</p>
+        <h2>Appliance:</h2>
+        <p>{{ appliance_impl.appliance }}</p>
+        <h2>Provider:</h2>
+        <p>{{ appliance_impl.site }}</p>
+        <h2>Image:</h2>
+        <p>{{ appliance_impl.image_name }}</p>
+    </div>
+{% endblock %}

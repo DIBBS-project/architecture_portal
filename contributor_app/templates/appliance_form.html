@@ -1,5 +1,7 @@
 {% extends "base_contributor.html" %}
 
+{% block navbar_title %}{{ block.super }} >> New Appliance{% endblock %}
+
 {% block content %}
     <form role="form" action="{% url 'contributor_appliance_post' %}" method="post">
         {% csrf_token %}

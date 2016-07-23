@@ -1,0 +1,8 @@
+.navbar {
+    background-color: #e00000;
+}
+
+.navbar-top-links>li>a:focus, .navbar-top-links>li>a:hover, .navbar-top-links .open>a, .navbar-top-links .open>a:focus, .navbar-top-links .open>a:hover,
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: #f01010;
+}

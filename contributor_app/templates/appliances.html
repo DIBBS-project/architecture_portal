@@ -1,5 +1,7 @@
 {% extends "base_contributor.html" %}
 
+{% block navbar_title %}{{ block.super }} >> Appliances{% endblock %}
+
 {% block toolbar %}
     <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
         <div class="portal-toolbar-content">
@@ -32,7 +34,7 @@
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs" data-toggle="popover" data-placement="auto right" data-html="true" title='Implementations<div class="btn-group pull-right"><a href="{% url 'contributor_appliance_implementation_form' %}?default_appliance={{ pair.first.name }}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-plus"></i> Add</a>'
-                            data-content='{% for impl in pair.first.implementations %}<a href="#"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
+                            data-content='{% for impl in pair.first.implementations %}<a href="{% url 'contributor_appliance_implementation_detail' appliance_impl_name=impl.name %}"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
                             <i class="glyphicon glyphicon-th-list"></i> Show implementations
                         </button>
                     </div>
@@ -59,7 +61,7 @@
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs" data-toggle="popover" data-placement="auto right" data-html="true" title='Implementations<div class="btn-group pull-right"><a href="{% url 'contributor_appliance_implementation_form' %}?default_appliance={{ pair.second.name }}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-plus"></i> Add</a>'
-                            data-content='{% for impl in pair.second.implementations %}<a href="#"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
+                            data-content='{% for impl in pair.second.implementations %}<a href="{% url 'contributor_appliance_implementation_detail' appliance_impl_name=impl.name %}"><div class="portal-popover-image portal-image-placeholder"></div> {{ impl.name }}</a>{% endfor %}'>
                             <i class="glyphicon glyphicon-th-list"></i> Show implementations
                         </button>
                     </div>

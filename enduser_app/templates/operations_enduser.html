@@ -1,5 +1,7 @@
 {% extends "base_enduser.html" %}
 
+{% block navbar_title %}{{ block.super }} >> Operations{% endblock %}
+
 {% block content %}
     {% for pair in operations_pairs %}
     <div class="row">
@@ -40,7 +42,7 @@
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.first.id }}/">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instances_operation' operation_id=pair.first.id %}">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
                         <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}?default_operation={{ pair.first.id }}">
@@ -89,7 +91,7 @@
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-default btn-xs" href="/enduser/instances/foroperation/{{ pair.second.id }}/">
+                        <a class="btn btn-default btn-xs" href="{% url 'enduser_instances_operation' operation_id=pair.second.id %}">
                             <i class="glyphicon glyphicon-list"></i> List instances
                         </a>
                         <a class="btn btn-default btn-xs" href="{% url 'enduser_instance_form' %}?default_operation={{ pair.second.id }}">

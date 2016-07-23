@@ -2,6 +2,14 @@ a, a:hover, a:active, a:focus, a:visited {
     text-decoration: none;
 }
 
+.navbar-header a, .navbar-top-links > li > a {
+    color: #fbfbfb !important;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #fbfbfb !important;
+}
+
 .portal-toolbar {
     background: #ddd;
     padding: 4px;
@@ -65,7 +73,8 @@ a, a:hover, a:active, a:focus, a:visited {
 }
 
 .portal-panel .panel-footer .popover {
-    width: 276px;
+    width: 376px;
+    max-width: 376px;
     height: 250px;
 }
 
@@ -90,4 +99,10 @@ a, a:hover, a:active, a:focus, a:visited {
     width: 76px;
     vertical-align: middle;
     margin-right: 4px;
+}
+
+.portal_details h2 {
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 5px;
 }

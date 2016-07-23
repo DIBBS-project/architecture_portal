@@ -162,22 +162,24 @@ def execution_form(request, message_error=None):
         default_instance = None
 
     return render(request, "execution_form.html", {"instances": instances_list,
-                                                  "default_instance": default_instance,
-                                                  "message_error": message_error})
+                                                   "default_instance": default_instance,
+                                                   "message_error": message_error})
 
 
 def execution_post(request):
     from pd_client.apis.executions_api import ExecutionsApi
     from pd_client.configure import configure_auth_basic
+    from rp_client.apis.users_api import UsersApi
+
+    user = UsersApi().users_id_get(id=1)
 
     operation_instance = request.POST.get('operation_instance')
-    resource_provisioner_token = request.POST.get('resource_provisioner_token')
     callback_url = request.POST.get('callback_url')
     force_spawn_cluster = request.POST.get('force_spawn_cluster')
 
     request_data = {
         "process_instance": operation_instance,
-        "resource_provisioner_token": resource_provisioner_token,
+        "resource_provisioner_token": user.api_token,
         "callback_url": callback_url,
     }
 
@@ -188,7 +190,21 @@ def execution_post(request):
     try:
         ret = ExecutionsApi().executions_post(data=request_data)
         execution_id = ret.id
+        import threading
+        threading.Thread(target=run_execution, args=(request, execution_id))  # Makes the instance run at creation
         return executions(request, message_success="Successfully created execution #" + str(execution_id) + ".")
     except Exception as e:
         return execution_form(request, message_error="Error creating the execution: " + str(e))
 
+
+def clusters(request):
+    from rp_client.apis.cluster_definitions_api import ClusterDefinitionsApi
+
+    clusters_list = ClusterDefinitionsApi().clusters_get()
+
+    for cluster in clusters_list:
+        cluster.number_of_nodes = len(cluster.hosts_ips)
+
+    # operations_pairs = make_pairs(operations_list)
+
+    return render(request, "clusters.html", {"clusters_list": clusters_list})

@@ -44,7 +44,7 @@ def appliances(request, message_success=None):
                                                "message_success": message_success})
 
 
-def operations(request):
+def operations(request, message_success=None):
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
     from pr_client.apis.process_implementations_api import ProcessImplementationsApi
     import json
@@ -63,35 +63,70 @@ def operations(request):
 
     operations_pairs = make_pairs(operations_list)
 
-    return render(request, "operations_contributor.html", {"operations_pairs": operations_pairs})
+    return render(request, "operations_contributor.html", {"operations_pairs": operations_pairs,
+                                                           "message_success": message_success})
 
 
-def clusters(request):
-    from rp_client.apis.cluster_definitions_api import ClusterDefinitionsApi
-
-
-    clusters_list = ClusterDefinitionsApi().clusters_get()
-
-    for cluster in clusters_list:
-        cluster.number_of_nodes = len(cluster.hosts_ips)
-        # appliance = cluster.appliance
-
-    # operations_pairs = make_pairs(operations_list)
-
-    return render(request, "clusters.html", {"clusters_list": clusters_list})
-
-
-def operation_form(request):
+def operation_form(request, message_error=None):
     from ar_client.apis.appliances_api import AppliancesApi
 
     appliances_list = AppliancesApi().appliances_get()
 
-    return render(request, "operation_form.html", {"appliances": appliances_list})
+    return render(request, "operation_form.html", {"appliances": appliances_list,
+                                                   "message_error": message_error})
 
 
 def operation_post(request):
-    print ("post")
-    pass
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+    from pr_client.configure import configure_auth_basic
+
+    name = request.POST.get('name')
+    description = request.POST.get('description')
+    string_parameters = request.POST.get('string_parameters')
+    file_parameters = request.POST.get('file_parameters')
+    appliance = request.POST.get('appliance')
+    archive_url = request.POST.get('archive_url')
+    cwd = request.POST.get('cwd')
+    command = request.POST.get('command')
+    argv = request.POST.get('argv')
+    environment = request.POST.get('environment')
+    output_type = request.POST.get('output_type')
+    output_parameters = request.POST.get('output_parameters')
+
+    configure_auth_basic("admin", "pass")
+
+    definition_request_data = {
+        "name": name,
+        "description": description,
+        "string_parameters": string_parameters,
+        "file_parameters": file_parameters
+    }
+
+    try:
+        ret = ProcessDefinitionsApi().processdefs_post(data=definition_request_data)
+        operation_id = ret.id
+    except Exception as e:
+        return operation_form(request, message_error="Error creating the operation definition: " + str(e))
+
+    implementation_request_data = {
+        "name": name + "_impl",
+        "appliance": appliance,
+        "process_definition": operation_id,
+        "archive_url": archive_url,
+        "executable": command,
+        "cwd": cwd,
+        "environment": environment,
+        "argv": argv,
+        "output_type": output_type,
+        "output_parameters": output_parameters
+    }
+
+    try:
+        ProcessImplementationsApi().processimpls_post(data=implementation_request_data)
+        return operations(request, message_success="Successfully created operation #" + str(operation_id) + ".")
+    except Exception as e:
+        return operation_form(request, message_error="Error creating the operation implementation: " + str(e))
 
 
 def appliance_form(request, message_error=None):
@@ -161,3 +196,38 @@ def appliance_implementation_post(request):
         )
     except Exception as e:
         return appliance_implementation_form(request, message_error="Error creating the appliance: " + str(e))
+
+
+def appliance_implementation_detail(request, appliance_impl_name):
+    from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
+
+    appliance_impl = ApplianceImplementationsApi().appliances_impl_name_get(name=appliance_impl_name)
+
+    return render(request, "appliance_implementation_detail.html", {"appliance_impl": appliance_impl})
+
+
+def operation_detail(request, operation_id):
+    import json
+    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+
+    operation_def = ProcessDefinitionsApi().processdefs_id_get(operation_id)
+    operation_impl = ProcessImplementationsApi().processimpls_id_get(operation_def.implementations[0])
+
+    operation = {
+        "name": operation_def.name,
+        "id": operation_def.id,
+        "appliance": operation_impl.appliance,
+        "description": operation_def.description,
+        "string_parameters": json.loads(operation_def.string_parameters),
+        "file_parameters": json.loads(operation_def.file_parameters),
+        "archive_url": operation_impl.archive_url,
+        "cwd": operation_impl.cwd,
+        "command": operation_impl.executable,
+        "environment": make_keyval_pairs(json.loads(operation_impl.environment)),
+        "argv": json.loads(operation_impl.argv),
+        "output_type": operation_impl.name,
+        "output_parameters": make_keyval_pairs(json.loads(operation_impl.output_parameters)),
+    }
+
+    return render(request, "operation_detail.html", {"operation": operation})

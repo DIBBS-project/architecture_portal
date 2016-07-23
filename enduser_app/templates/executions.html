@@ -1,5 +1,7 @@
 {% extends "base_enduser.html" %}
 
+{% block navbar_title %}{{ block.super }} >> Operations Dashboard{% endblock %}
+
 {% block toolbar %}
     <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
         <div class="portal-toolbar-content">
@@ -10,6 +12,8 @@
     </div>
     <div class="portal-toolbar-after"></div>
 {% endblock %}
+
+{% load staticfiles %}
 
 {% block content %}
     <div class="row">
@@ -29,7 +33,7 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tbody">
                         {% for execution in executions_list %}
                             <tr>
                                 <td><b>{{ execution.id }}</b></td>
@@ -47,7 +51,7 @@
                                         <a target="_blank" href="{{ execution.output_location }}"
                                            class="btn btn-default">View result</a>
                                     {% elif execution.status == "RUNNING" %}
-                                        <img src="/static/loading.gif" alt="loading">
+                                        <img src="{% static "img/loading.gif" %}" alt="loading">
                                     {% else %}
                                         <span>-</span>
                                     {% endif %}
@@ -100,6 +104,7 @@
                         {#                            </td>#}
                         {#                        </tr>#}
                         </tbody>
+                        <div id="tbody_hidden" style="display: none;">Hidden</div>
                     </table>
                 </div>
             </div>
@@ -109,17 +114,19 @@
 {% endblock %}
 
 {% block additional_body_footer %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
     <script type="text/javascript">
         window.setInterval(function () {
-            $("#content_hidden").load(location.href + " #content>*", function () {
-                if ($("#content_hidden").html() != $("#content").html()) {
-                    $("#content").html($("#content_hidden").html());
+            $("#tbody_hidden").load("{% url 'enduser_executions' %} #tbody>*", function () {
+                if ($("#tbody_hidden").html() != $("#tbody").html()) {
+                    $("#tbody").html($("#tbody_hidden").html());
                 }
             });
         }, 5000)
 
         function runExecution(id, button) {
-            $(button).replaceWith('<img src="/static/loading.gif" alt="loading">');
+            $(button).replaceWith('<img src="{% static "img/loading.gif" %}" alt="loading">');
             $.ajax({
                 url: "/enduser/run_execution/" + id + "/"
             });

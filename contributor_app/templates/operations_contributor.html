@@ -1,5 +1,7 @@
 {% extends "base_contributor.html" %}
 
+{% block navbar_title %}{{ block.super }} >> Operations{% endblock %}
+
 {% block toolbar %}
     <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
         <div class="portal-toolbar-content">
@@ -51,7 +53,7 @@
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-default btn-xs" href="operation_detail.html">
+                        <a class="btn btn-default btn-xs" href="{% url 'contributor_operation_detail' operation_id=pair.first.id %}">
                             <i class="glyphicon glyphicon-eye-open"></i> Show details
                         </a>
                     </div>
@@ -97,7 +99,7 @@
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-default btn-xs" href="operation_detail.html">
+                        <a class="btn btn-default btn-xs" href="{% url 'contributor_operation_detail' operation_id=pair.second.id %}">
                             <i class="glyphicon glyphicon-eye-open"></i> Show details
                         </a>
                     </div>

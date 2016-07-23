@@ -1,5 +1,7 @@
 {% extends "base_contributor.html" %}
 
+{% block navbar_title %}{{ block.super }} >> New Appliance Implementation{% endblock %}
+
 {% block content %}
     <form role="form" action="{% url 'contributor_appliance_implementation_post' %}" method="post">
         {% csrf_token %}
@@ -14,7 +16,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="site">Site:</label>
+            <label for="site">Provider:</label>
             <select class="form-control" name="site" id="site" required>
                 {% for site in sites %}
                     <option>{{ site.name }}</option>

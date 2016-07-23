@@ -1,5 +1,7 @@
 {% extends "base_enduser.html" %}
 
+{% block navbar_title %}{{ block.super }} >> Instances{% endblock %}
+
 {% block toolbar %}
     <div class="btn-toolbar portal-toolbar" role="toolbar" aria-label="...">
         <div class="portal-toolbar-content">
@@ -48,7 +50,7 @@
                         <div class="panel-footer clearfix">
                             <div class="btn-group pull-right">
                                 <a class="btn btn-default btn-xs" href="{% url 'enduser_execution_form' %}?default_instance={{ operations_pair.first.id }}">
-                                    <i class="glyphicon glyphicon-plus"></i> Create execution
+                                    <i class="glyphicon glyphicon-plus"></i> Launch instance
                                 </a>
                             </div>
                         </div>
@@ -85,7 +87,7 @@
                         <div class="panel-footer clearfix">
                             <div class="btn-group pull-right">
                                 <a class="btn btn-default btn-xs" href="{% url 'enduser_execution_form' %}?default_instance={{ operations_pair.second.id }}">
-                                    <i class="glyphicon glyphicon-plus"></i> Create execution
+                                    <i class="glyphicon glyphicon-plus"></i> Launch instance
                                 </a>
                             </div>
                         </div>

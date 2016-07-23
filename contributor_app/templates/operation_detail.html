@@ -1,0 +1,54 @@
+{% extends "base_contributor.html" %}
+
+{% block navbar_title %}{{ block.super }} >> Operation{% endblock %}
+
+{% block content %}
+    <div class="portal_details">
+        <h2>Name:</h2>
+        <p>{{ operation.name }}</p>
+        <h2>ID:</h2>
+        <p>{{ operation.id }}</p>
+        <h2>Appliance:</h2>
+        <p>{{ operation.appliance }}</p>
+        <h2>Description:</h2>
+        <p>{{ operation.description }}</p>
+        <h2>String parameters:</h2>
+        <ul>
+            {% for param in operation.string_parameters %}
+            <li>param</li>
+            {% endfor %}
+        </ul>
+        <h2>File parameters:</h2>
+        <ul>
+            {% for param in operation.file_parameters %}
+            <li>param</li>
+            {% endfor %}
+        </ul>
+        <h2>Operation files archive URL:</h2>
+        <p>{{ operation.archive_url }}</p>
+        <h2>Current Working Directory:</h2>
+        <p>{{ operation.cwd }}</p>
+        <h2>Command:</h2>
+        <p>{{ operation.command }}</p>
+        <h2>Command arguments:</h2>
+        <ul>
+            {% for arg in operation.argv %}
+            <li>arg</li>
+            {% endfor %}
+        </ul>
+        <h2>Environment:</h2>
+        <ul>
+            {% for keypair in operation.environment %}
+            <li><strong>{{ keypair.key }}:</strong> {{ keypair.val }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Output type:</h2>
+        <p>{{ operation.output_type }}</p>
+        <h2>Output parameters:</h2>
+        <ul>
+            {% for keypair in operation.output_parameters %}
+            <li><strong>{{ keypair.key }}:</strong> {{ keypair.val }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

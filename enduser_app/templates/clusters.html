@@ -1,4 +1,6 @@
-{% extends "base_contributor.html" %}
+{% extends "base_enduser.html" %}
+
+{% block navbar_title %}{{ block.super }} >> Appliances Dashboard{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -13,7 +15,7 @@
                         <th>Name</th>
                         <th>Appliance</th>
                         <th>Number of executions</th>
-                        <th>Number of nodes</th>
+                        <th>Nodes:</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -24,7 +26,19 @@
                         <td>{{ cluster.name }}</td>
                         <td>{{ cluster.appliance }}</td>
                         <td>N.a.</td>
-                        <td>{{ cluster.number_of_nodes }} <a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a></td>
+                        <td>{{ cluster.number_of_nodes }} nodes:
+                            <ul>
+                                {% for ip in cluster.hosts_ips %}
+                                    {% if ip == cluster.master_node_ip %}
+                                        <li><strong>{{ ip }}</strong></li>
+                                    {% else %}
+                                        <li>{{ ip }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+
+                            <!--<a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a>-->
+                        </td>
                         <td>-</td>
                     </tr>
                 {% endfor %}

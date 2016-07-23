@@ -1,5 +1,7 @@
 {% extends "base_enduser.html" %}
 
+{% block navbar_title %}{{ block.super }} >> New Instance{% endblock %}
+
 {% block content %}
     <form role="form" action="{% url 'enduser_instance_post' %}" method="post">
         {% csrf_token %}
