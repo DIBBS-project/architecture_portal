@@ -51,6 +51,7 @@ def operations(request):
 
 
 def instances(request, message_success=None):
+    import json
     from pd_client.apis.process_instances_api import ProcessInstancesApi
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
 
@@ -58,6 +59,8 @@ def instances(request, message_success=None):
     for instance in instances_list:
         process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
         instance.process = process
+        instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
+        instance.files = make_keyval_pairs(json.loads(instance.files))
 
     instances_pairs = make_pairs(instances_list)
 
@@ -66,6 +69,7 @@ def instances(request, message_success=None):
 
 
 def instances_operation(request, operation_id):
+    import json
     from pd_client.apis.process_instances_api import ProcessInstancesApi
     from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
 
@@ -78,6 +82,8 @@ def instances_operation(request, operation_id):
         if instance.process_definition_id == operation_id:
             process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
             instance.process = process
+            instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
+            instance.files = make_keyval_pairs(json.loads(instance.files))
             instances_list_operation.append(instance)
 
     instances_pairs = make_pairs(instances_list_operation)
@@ -197,7 +203,6 @@ def execution_post(request):
         thr = threading.Thread(target=run_execution, args=(request, execution_id))
         thr.start()
         time.sleep(2)
-
 
         return executions(request, message_success="Successfully created execution #" + str(execution_id) + ".")
     except Exception as e:
