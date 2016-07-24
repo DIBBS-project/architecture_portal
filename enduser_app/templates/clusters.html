@@ -3,48 +3,64 @@
 {% block navbar_title %}{{ block.super }} >> Appliances Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="panel panel-default">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table cluster-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Appliance</th>
+                                <th>Number of executions</th>
+                                <th>Nodes:</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        {% for cluster in clusters_list %}
+                            <tr>
+                                <td><b>{{ cluster.id }}</b></td>
+                                <td>{{ cluster.name }}</td>
+                                <td>{{ cluster.appliance }}</td>
+                                <td>N.a.</td>
+                                <td>{{ cluster.number_of_nodes }} nodes:
+                                    <ul>
+                                        {% for ip in cluster.hosts_ips %}
+                                            {% if ip == cluster.master_node_ip %}
+                                                <li><strong>{{ ip }}</strong></li>
+                                            {% else %}
+                                                <li>{{ ip }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
 
-        <!-- Table -->
-        <div class="table-responsive">
-            <table class="table execution-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Appliance</th>
-                        <th>Number of executions</th>
-                        <th>Nodes:</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for cluster in clusters_list %}
-                    <tr>
-                        <td><b>{{ cluster.id }}</b></td>
-                        <td>{{ cluster.name }}</td>
-                        <td>{{ cluster.appliance }}</td>
-                        <td>N.a.</td>
-                        <td>{{ cluster.number_of_nodes }} nodes:
-                            <ul>
-                                {% for ip in cluster.hosts_ips %}
-                                    {% if ip == cluster.master_node_ip %}
-                                        <li><strong>{{ ip }}</strong></li>
-                                    {% else %}
-                                        <li>{{ ip }}</li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-
-                            <!--<a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a>-->
-                        </td>
-                        <td>-</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                                    <!--<a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a>-->
+                                </td>
+                                <td>-</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <div id="tbody_hidden" style="display: none;">Hidden</div>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block additional_body_footer %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        window.setInterval(function () {
+            $("#tbody_hidden").load("{% url 'enduser_clusters' %} #tbody>*", function () {
+                if ($("#tbody_hidden").html() != $("#tbody").html()) {
+                    $("#tbody").html($("#tbody_hidden").html());
+                }
+            });
+        }, 5000)
+    </script>
 {% endblock %}

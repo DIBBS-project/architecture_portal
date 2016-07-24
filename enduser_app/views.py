@@ -190,8 +190,15 @@ def execution_post(request):
     try:
         ret = ExecutionsApi().executions_post(data=request_data)
         execution_id = ret.id
+
+        # Makes the instance run at creation
         import threading
-        threading.Thread(target=run_execution, args=(request, execution_id))  # Makes the instance run at creation
+        import time
+        thr = threading.Thread(target=run_execution, args=(request, execution_id))
+        thr.start()
+        time.sleep(2)
+
+
         return executions(request, message_success="Successfully created execution #" + str(execution_id) + ".")
     except Exception as e:
         return execution_form(request, message_error="Error creating the execution: " + str(e))

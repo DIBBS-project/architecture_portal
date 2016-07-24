@@ -15,13 +15,13 @@
         <h2>String parameters:</h2>
         <ul>
             {% for param in operation.string_parameters %}
-            <li>param</li>
+            <li>{{ param }}</li>
             {% endfor %}
         </ul>
         <h2>File parameters:</h2>
         <ul>
             {% for param in operation.file_parameters %}
-            <li>param</li>
+            <li>{{ param }}</li>
             {% endfor %}
         </ul>
         <h2>Operation files archive URL:</h2>
@@ -33,7 +33,7 @@
         <h2>Command arguments:</h2>
         <ul>
             {% for arg in operation.argv %}
-            <li>arg</li>
+            <li>{{ arg }}</li>
             {% endfor %}
         </ul>
         <h2>Environment:</h2>

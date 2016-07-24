@@ -6,3 +6,11 @@
 .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
     background-color: #10c010;
 }
+
+.cluster-table thead {
+    background-color: #ffefa0;
+}
+
+.execution-table thead {
+    background-color: #a0efff;
+}
