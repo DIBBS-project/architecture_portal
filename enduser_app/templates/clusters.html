@@ -14,9 +14,9 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Appliance</th>
-                                <th>Executions</th>
                                 <th>Nodes</th>
-                                <th>Status</th>
+                                <th>Deployment</th>
+                                <th>Executions</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -26,6 +26,20 @@
                                 <td><b>{{ cluster.id }}</b></td>
                                 <td>{{ cluster.name }}</td>
                                 <td>{{ cluster.appliance }}</td>
+                                <td>{{ cluster.number_of_nodes }} nodes:
+                                    <ul>
+                                        {% for ip in cluster.hosts_ips %}
+                                            {% if ip == cluster.master_node_ip %}
+                                                <li><strong>{{ ip }}</strong></li>
+                                            {% else %}
+                                                <li>{{ ip }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+
+                                    <!--<a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a>-->
+                                </td>
+                                <td>{{ cluster.status }}</td>
 {#                                <td>{{ cluster.running_executions|length }}</td>#}
                                 <td>
                                     {% if cluster.running_executions|length > 0 %}
@@ -41,20 +55,6 @@
                                     No executions
                                     {% endif %}
                                 </td>
-                                <td>{{ cluster.number_of_nodes }} nodes:
-                                    <ul>
-                                        {% for ip in cluster.hosts_ips %}
-                                            {% if ip == cluster.master_node_ip %}
-                                                <li><strong>{{ ip }}</strong></li>
-                                            {% else %}
-                                                <li>{{ ip }}</li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-
-                                    <!--<a class="btn btn-default" href="#" disabled="true">+</a> <a class="btn btn-default" href="#" disabled="true">-</a>-->
-                                </td>
-                                <td>{{ cluster.status }}</td>
                                 <td>-</td>
                             </tr>
                         {% endfor %}
