@@ -59,6 +59,7 @@ def instances(request, message_success=None):
     for instance in instances_list:
         process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
         instance.process = process
+        instance.logo_url = process.logo_url
         instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
         instance.files = make_keyval_pairs(json.loads(instance.files))
 
@@ -82,6 +83,7 @@ def instances_operation(request, operation_id):
         if instance.process_definition_id == operation_id:
             process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
             instance.process = process
+            instance.logo_url = process.logo_url
             instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
             instance.files = make_keyval_pairs(json.loads(instance.files))
             instances_list_operation.append(instance)

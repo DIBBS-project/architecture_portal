@@ -141,10 +141,12 @@ def appliance_post(request):
     from ar_client.configure import configure_auth_basic
 
     name = request.POST.get('name')
+    logo_url = request.POST.get('logo_url')
     description = request.POST.get('description')
 
     request_data = {
         "name": name,
+        "logo_url": logo_url,
         "description": description,
     }
 
@@ -177,12 +179,14 @@ def appliance_implementation_post(request):
     from ar_client.configure import configure_auth_basic
 
     name = request.POST.get('name')
+    logo_url = request.POST.get('logo_url')
     image_name = request.POST.get('image_name')
     site = request.POST.get('site')
     appliance = request.POST.get('appliance')
 
     request_data = {
         "name": name,
+        "logo_url": logo_url,
         "image_name": image_name,
         "site": site,
         "appliance": appliance,
@@ -218,6 +222,7 @@ def operation_detail(request, operation_id):
 
     operation = {
         "name": operation_def.name,
+        "logo_url": operation_def.logo_url,
         "id": operation_def.id,
         "appliance": operation_impl.appliance,
         "description": operation_def.description,
