@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core import serializers
 import requests
-
+import json
 
 def make_pairs(original_list):
     pairs = []
@@ -216,7 +216,15 @@ def clusters(request):
 
     clusters_list = ClusterDefinitionsApi().clusters_get()
 
+    def extract_app(app):
+        return {"name": app["name"], "progress": int(app["progress"])}
+
     for cluster in clusters_list:
+        response = requests.get("http://%s:8088/ws/v1/cluster/apps" % (cluster.master_node_ip))
+        response_json = json.loads(response.content)
+        executions = map(lambda x: extract_app(x), response_json["apps"]["app"])
+        running_executions = filter(lambda x: x["progress"] < 100, executions)
+        cluster.running_executions = running_executions
         cluster.number_of_nodes = len(cluster.hosts_ips)
 
     # operations_pairs = make_pairs(operations_list)

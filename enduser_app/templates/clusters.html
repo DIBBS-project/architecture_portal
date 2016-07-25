@@ -14,7 +14,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Appliance</th>
-                                <th>Number of executions</th>
+                                <th>Executions</th>
                                 <th>Nodes</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -26,7 +26,21 @@
                                 <td><b>{{ cluster.id }}</b></td>
                                 <td>{{ cluster.name }}</td>
                                 <td>{{ cluster.appliance }}</td>
-                                <td>N.a.</td>
+{#                                <td>{{ cluster.running_executions|length }}</td>#}
+                                <td>
+                                    {% if cluster.running_executions|length > 0 %}
+                                        {% for execution in cluster.running_executions %}
+                                            {{ execution.name }}
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{ execution.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ execution.progress }}%">
+                                                    ({{ execution.progress }}%)
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                    No executions
+                                    {% endif %}
+                                </td>
                                 <td>{{ cluster.number_of_nodes }} nodes:
                                     <ul>
                                         {% for ip in cluster.hosts_ips %}
@@ -57,10 +71,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 
     <script type="text/javascript">
+        function load_pop_over() {
+            $(function () {
+                $('[rel="popover"]').popover({
+                    container: 'body',
+                    html: true,
+                    content: function () {
+                        var clone = $($(this).data('popover-content')).clone(true).removeClass('hide');
+                        return clone;
+                    }
+                }).click(function (e) {
+                    e.preventDefault();
+                });
+            });
+        }
+        load_pop_over();
         window.setInterval(function () {
             $("#tbody_hidden").load("{% url 'enduser_clusters' %} #tbody>*", function () {
                 if ($("#tbody_hidden").html() != $("#tbody").html()) {
                     $("#tbody").html($("#tbody_hidden").html());
+                    load_pop_over();
                 }
             });
         }, 5000)
