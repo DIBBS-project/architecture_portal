@@ -220,9 +220,13 @@ def clusters(request):
         return {"name": app["name"], "progress": int(app["progress"])}
 
     for cluster in clusters_list:
-        response = requests.get("http://%s:8088/ws/v1/cluster/apps" % (cluster.master_node_ip))
-        response_json = json.loads(response.content)
-        executions = map(lambda x: extract_app(x), response_json["apps"]["app"])
+        executions = []
+        try:
+            response = requests.get("http://%s:8088/ws/v1/cluster/apps" % (cluster.master_node_ip))
+            response_json = json.loads(response.content)
+            executions = map(lambda x: extract_app(x), response_json["apps"]["app"])
+        except:
+            executions = []
         running_executions = filter(lambda x: x["progress"] < 100, executions)
         cluster.running_executions = running_executions
         cluster.number_of_nodes = len(cluster.hosts_ips)
