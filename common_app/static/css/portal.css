@@ -35,6 +35,12 @@ a, a:hover, a:active, a:focus, a:visited {
 .portal-panel {
 }
 
+.portal-image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .portal-image-placeholder {
     background: #ccc;
 }

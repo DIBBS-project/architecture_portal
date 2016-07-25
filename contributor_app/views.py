@@ -82,6 +82,7 @@ def operation_post(request):
     from pr_client.configure import configure_auth_basic
 
     name = request.POST.get('name')
+    logo_url = request.POST.get('logo_url')
     description = request.POST.get('description')
     string_parameters = request.POST.get('string_parameters')
     file_parameters = request.POST.get('file_parameters')
@@ -98,6 +99,7 @@ def operation_post(request):
 
     definition_request_data = {
         "name": name,
+        "logo_url": logo_url,
         "description": description,
         "string_parameters": string_parameters,
         "file_parameters": file_parameters
