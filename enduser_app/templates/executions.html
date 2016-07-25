@@ -37,8 +37,8 @@
                         {% for execution in executions_list %}
                             <tr>
                                 <td><b>{{ execution.id }}</b></td>
-                                <td>{{ execution.instance.name }}</td>
-                                <td>{{ execution.instance.process.name }}</td>
+                                <td>#{{ execution.instance.id }} - {{ execution.instance.name }}</td>
+                                <td>#{{ execution.instance.process.id }} - {{ execution.instance.process.name }}</td>
                                 <td>chardetm</td>
                                 <td>{{ execution.status }}</td>
                                 <td>{{ execution.status_info }}</td>

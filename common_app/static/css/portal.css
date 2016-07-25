@@ -32,7 +32,8 @@ a, a:hover, a:active, a:focus, a:visited {
   padding-top: 12px;
 }
 
-.portal-panel {
+.portal-panel-content {
+    text-align: justify;
 }
 
 .portal-image {
