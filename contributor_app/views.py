@@ -30,6 +30,7 @@ def appliances(request, message_success=None):
     from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
 
     appliances_list = AppliancesApi().appliances_get()
+    appliances_list2 = []
     for app in appliances_list:
         impls = []
         for impl_name in app.implementations:
@@ -37,8 +38,10 @@ def appliances(request, message_success=None):
             impls.append(impl)
 
         app.implementations = impls
+        if app.name != "common":
+            appliances_list2.append(app)
 
-    appliances_pairs = make_pairs(appliances_list)
+    appliances_pairs = make_pairs(appliances_list2)
 
     return render(request, "appliances.html", {"appliances_pairs": appliances_pairs,
                                                "message_success": message_success})
