@@ -24,24 +24,10 @@
             <li>{{ param }}</li>
             {% endfor %}
         </ul>
-        <h2>Operation files archive URL:</h2>
-        <p>{{ operation.archive_url }}</p>
         <h2>Current Working Directory:</h2>
         <p>{{ operation.cwd }}</p>
-        <h2>Command:</h2>
-        <p>{{ operation.command }}</p>
-        <h2>Command arguments:</h2>
-        <ul>
-            {% for arg in operation.argv %}
-            <li>{{ arg }}</li>
-            {% endfor %}
-        </ul>
-        <h2>Environment:</h2>
-        <ul>
-            {% for keypair in operation.environment %}
-            <li><strong>{{ keypair.key }}:</strong> {{ keypair.val }}</li>
-            {% endfor %}
-        </ul>
+        <h2>Script:</h2>
+        <p>{{ operation.script }}</p>
         <h2>Output type:</h2>
         <p>{{ operation.output_type }}</p>
         <h2>Output parameters:</h2>

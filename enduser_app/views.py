@@ -37,9 +37,7 @@ def operations(request):
 
     for ope in operations_list:
         impl = ProcessImplementationsApi().processimpls_id_get(id=ope.implementations[0])
-        impl.environment = make_keyval_pairs(json.loads(impl.environment))
         impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
-        impl.argv = json.loads(impl.argv)
         ope.implementation = impl
 
         ope.string_parameters = json.loads(ope.string_parameters)

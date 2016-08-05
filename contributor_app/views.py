@@ -56,9 +56,7 @@ def operations(request, message_success=None):
 
     for ope in operations_list:
         impl = ProcessImplementationsApi().processimpls_id_get(id=ope.implementations[0])
-        impl.environment = make_keyval_pairs(json.loads(impl.environment))
         impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
-        impl.argv = json.loads(impl.argv)
         ope.implementation = impl
 
         ope.string_parameters = json.loads(ope.string_parameters)
@@ -90,11 +88,8 @@ def operation_post(request):
     string_parameters = request.POST.get('string_parameters')
     file_parameters = request.POST.get('file_parameters')
     appliance = request.POST.get('appliance')
-    archive_url = request.POST.get('archive_url')
     cwd = request.POST.get('cwd')
-    command = request.POST.get('command')
-    argv = request.POST.get('argv')
-    environment = request.POST.get('environment')
+    script = request.POST.get('script')
     output_type = request.POST.get('output_type')
     output_parameters = request.POST.get('output_parameters')
 
@@ -118,11 +113,8 @@ def operation_post(request):
         "name": name + "_impl",
         "appliance": appliance,
         "process_definition": operation_id,
-        "archive_url": archive_url,
-        "executable": command,
         "cwd": cwd,
-        "environment": environment,
-        "argv": argv,
+        "script": script,
         "output_type": output_type,
         "output_parameters": output_parameters
     }
@@ -231,11 +223,8 @@ def operation_detail(request, operation_id):
         "description": operation_def.description,
         "string_parameters": json.loads(operation_def.string_parameters),
         "file_parameters": json.loads(operation_def.file_parameters),
-        "archive_url": operation_impl.archive_url,
         "cwd": operation_impl.cwd,
-        "command": operation_impl.executable,
-        "environment": make_keyval_pairs(json.loads(operation_impl.environment)),
-        "argv": json.loads(operation_impl.argv),
+        "script": operation_impl.script,
         "output_type": operation_impl.name,
         "output_parameters": make_keyval_pairs(json.loads(operation_impl.output_parameters)),
     }
