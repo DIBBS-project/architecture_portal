@@ -74,7 +74,7 @@
 {% endblock %}
 
 {% block additional_body_footer %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="{% static "jquery/jquery.min.js" %}"></script>
 
     <script type="text/javascript">
         window.setInterval(function () {
@@ -83,7 +83,7 @@
                     $("#tbody").html($("#tbody_hidden").html());
                 }
             });
-        }, 5000)
+        }, 5000);
 
         function runExecution(id, button) {
             $(button).replaceWith('<img src="{% static "img/loading.gif" %}" alt="loading">');

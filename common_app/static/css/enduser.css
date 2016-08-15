@@ -14,3 +14,15 @@
 .execution-table thead {
     background-color: #a0efff;
 }
+
+a, a:hover, a:active, a:focus, a:visited {
+    text-decoration: none;
+}
+
+.navbar-header a, .navbar-top-links > li > a {
+    color: #fbfbfb !important;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #fbfbfb !important;
+}

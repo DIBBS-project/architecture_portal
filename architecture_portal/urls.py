@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^contributor/', include('contributor_app.urls')),
     url(r'^enduser/', include('enduser_app.urls')),
     url(r'^$', contributor_views.index, name='index'),
+    url(r'^', include('common_app.urls')),
 ]

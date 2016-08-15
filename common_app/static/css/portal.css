@@ -2,8 +2,8 @@ a, a:hover, a:active, a:focus, a:visited {
     text-decoration: none;
 }
 
-.navbar-header a, .navbar-top-links > li > a {
-    color: #fbfbfb !important;
+.navbar-top-links > li > a {
+    display: inline-block;
 }
 
 .navbar-toggle .icon-bar {

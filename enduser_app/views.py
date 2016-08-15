@@ -4,6 +4,7 @@ from django.core import serializers
 import requests
 import json
 
+
 def make_pairs(original_list):
     pairs = []
 
@@ -113,8 +114,7 @@ def run_execution(request, execution_id):
     run_process_url = "%s/exec/%s/run/" % (global_settings.Settings().process_dispatcher_url, execution_id)
     requests.get(run_process_url)
 
-    data = serializers.serialize('json', {"status": "running"})
-    return HttpResponse(data, content_type='application/json')
+    return HttpResponse({"status": "running"}, content_type='application/json')
 
 
 def instance_form(request, message_error=None):
@@ -177,7 +177,9 @@ def execution_post(request):
     from pd_client.configure import configure_auth_basic
     from rp_client.apis.users_api import UsersApi
 
-    user = UsersApi().users_id_get(id=1)
+    # TODO: Remove hardcoded once the central authentication system in place
+    token_ret = UsersApi().api_token_auth_post({"username": "admin", "password": "pass"})
+    token = token_ret.token
 
     operation_instance = request.POST.get('operation_instance')
     callback_url = request.POST.get('callback_url')
@@ -185,7 +187,7 @@ def execution_post(request):
 
     request_data = {
         "process_instance": operation_instance,
-        "resource_provisioner_token": user.api_token,
+        "resource_provisioner_token": token,
         "callback_url": callback_url,
     }
 
