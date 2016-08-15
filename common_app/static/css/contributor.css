@@ -6,3 +6,15 @@
 .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
     background-color: #f01010;
 }
+
+a, a:hover, a:active, a:focus, a:visited {
+    text-decoration: none;
+}
+
+.navbar-header a, .navbar-top-links > li > a {
+    color: #fbfbfb !important;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #fbfbfb !important;
+}
