@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def credentials(request, message_success=None):
-    from rp_client.apis.credentials_api import CredentialsApi
+    from rm_client.apis.credentials_api import CredentialsApi
 
     creds = CredentialsApi().credentials_get()
 
@@ -12,7 +12,7 @@ def credentials(request, message_success=None):
 
 def credentials_form(request, message_error=None):
     from ar_client.apis.sites_api import SitesApi
-    from rp_client.apis.users_api import UsersApi
+    from rm_client.apis.users_api import UsersApi
     import string
 
     # TODO: Remove hardcoded ID when central authentication system implemented
@@ -27,8 +27,8 @@ def credentials_form(request, message_error=None):
 
 
 def credentials_post(request):
-    from rp_client.apis.credentials_api import CredentialsApi
-    from rp_client.configure import configure_auth_basic
+    from rm_client.apis.credentials_api import CredentialsApi
+    from rm_client.configure import configure_auth_basic
 
     service_provider = request.POST.get('service_provider')
     encrypted_content = request.POST.get('encrypted_content')

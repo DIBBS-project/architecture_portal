@@ -48,8 +48,8 @@ def appliances(request, message_success=None):
 
 
 def operations(request, message_success=None):
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.process_implementations_api import ProcessImplementationsApi
     import json
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
@@ -78,9 +78,9 @@ def operation_form(request, message_error=None):
 
 
 def operation_post(request):
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
-    from pr_client.configure import configure_auth_basic
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.process_implementations_api import ProcessImplementationsApi
+    from or_client.configure import configure_auth_basic
 
     name = request.POST.get('name')
     logo_url = request.POST.get('logo_url')
@@ -209,8 +209,8 @@ def appliance_implementation_detail(request, appliance_impl_name):
 
 def operation_detail(request, operation_id):
     import json
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.process_implementations_api import ProcessImplementationsApi
 
     operation_def = ProcessDefinitionsApi().processdefs_id_get(operation_id)
     operation_impl = ProcessImplementationsApi().processimpls_id_get(operation_def.implementations[0])

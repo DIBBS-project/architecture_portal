@@ -30,8 +30,8 @@ def index(request):
 
 
 def operations(request):
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from pr_client.apis.process_implementations_api import ProcessImplementationsApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.process_implementations_api import ProcessImplementationsApi
     import json
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
@@ -51,8 +51,8 @@ def operations(request):
 
 def instances(request, message_success=None):
     import json
-    from pd_client.apis.process_instances_api import ProcessInstancesApi
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.process_instances_api import ProcessInstancesApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
 
     instances_list = ProcessInstancesApi().process_instances_get()
     for instance in instances_list:
@@ -70,8 +70,8 @@ def instances(request, message_success=None):
 
 def instances_operation(request, operation_id):
     import json
-    from pd_client.apis.process_instances_api import ProcessInstancesApi
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.process_instances_api import ProcessInstancesApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
 
     # The parameters parsed from a URL are given as strings
     operation_id = int(operation_id)
@@ -93,9 +93,9 @@ def instances_operation(request, operation_id):
 
 
 def executions(request, message_success=None):
-    from pd_client.apis.process_instances_api import ProcessInstancesApi
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from pd_client.apis.executions_api import ExecutionsApi
+    from om_client.apis.process_instances_api import ProcessInstancesApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.executions_api import ExecutionsApi
 
     executions_list = ExecutionsApi().executions_get()
     for execution in executions_list:
@@ -118,7 +118,7 @@ def run_execution(request, execution_id):
 
 
 def instance_form(request, message_error=None):
-    from pr_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
 
     operations_list = ProcessDefinitionsApi().processdefs_get()
 
@@ -133,8 +133,8 @@ def instance_form(request, message_error=None):
 
 
 def instance_post(request):
-    from pd_client.apis.process_instances_api import ProcessInstancesApi
-    from pd_client.configure import configure_auth_basic
+    from om_client.apis.process_instances_api import ProcessInstancesApi
+    from om_client.configure import configure_auth_basic
 
     operation_id = request.POST.get('operation_id')
     name = request.POST.get('name')
@@ -158,7 +158,7 @@ def instance_post(request):
 
 
 def execution_form(request, message_error=None):
-    from pd_client.apis.process_instances_api import ProcessInstancesApi
+    from om_client.apis.process_instances_api import ProcessInstancesApi
 
     instances_list = ProcessInstancesApi().process_instances_get()
 
@@ -173,9 +173,9 @@ def execution_form(request, message_error=None):
 
 
 def execution_post(request):
-    from pd_client.apis.executions_api import ExecutionsApi
-    from pd_client.configure import configure_auth_basic
-    from rp_client.apis.users_api import UsersApi
+    from om_client.apis.executions_api import ExecutionsApi
+    from om_client.configure import configure_auth_basic
+    from rm_client.apis.users_api import UsersApi
 
     # TODO: Remove hardcoded once the central authentication system in place
     token_ret = UsersApi().api_token_auth_post({"username": "admin", "password": "pass"})
@@ -212,7 +212,7 @@ def execution_post(request):
 
 
 def clusters(request):
-    from rp_client.apis.cluster_definitions_api import ClusterDefinitionsApi
+    from rm_client.apis.cluster_definitions_api import ClusterDefinitionsApi
 
     clusters_list = ClusterDefinitionsApi().clusters_get()
 
