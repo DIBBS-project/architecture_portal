@@ -111,7 +111,7 @@ def executions(request, message_success=None):
 def run_execution(request, execution_id):
     import settings as global_settings
 
-    run_process_url = "%s/exec/%s/run/" % (global_settings.Settings().process_dispatcher_url, execution_id)
+    run_process_url = "%s/exec/%s/run/" % (global_settings.Settings().operation_manager_url, execution_id)
     requests.get(run_process_url)
 
     return HttpResponse({"status": "running"}, content_type='application/json')

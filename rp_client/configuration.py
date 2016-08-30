@@ -63,7 +63,7 @@ class Configuration(object):
         Constructor
         """
         # Default Base url
-        self.host = Settings().resource_provisioner_url
+        self.host = Settings().resource_manager_url
         # Default api client
         self.api_client = None
         # Temp file folder for downloading files
