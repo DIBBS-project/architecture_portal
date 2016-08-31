@@ -3,6 +3,17 @@ from django.shortcuts import render
 from django.core import serializers
 import requests
 import json
+from settings import Settings
+
+import base64
+
+
+def configure_basic_authentication(swagger_client, username, password):
+    authentication_string = "%s:%s" % (username, password)
+    base64_authentication_string = base64.b64encode(bytes(authentication_string))
+    header_key = "Authorization"
+    header_value = "Basic %s" % (base64_authentication_string, )
+    swagger_client.api_client.default_headers[header_key] = header_value
 
 
 def make_pairs(original_list):
@@ -30,14 +41,24 @@ def index(request):
 
 
 def operations(request):
-    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
-    from or_client.apis.process_implementations_api import ProcessImplementationsApi
+    from or_client.apis.operations_api import OperationsApi
+    from or_client.apis.operation_versions_api import OperationVersionsApi
     import json
 
-    operations_list = ProcessDefinitionsApi().processdefs_get()
+    # Create a client for Operations
+    operations_client = OperationsApi()
+    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operations_client, "admin", "pass")
+
+    # Create a client for OperationVersions
+    operation_verions_client = OperationVersionsApi()
+    operation_verions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operation_verions_client, "admin", "pass")
+
+    operations_list = operations_client.operations_get()
 
     for ope in operations_list:
-        impl = ProcessImplementationsApi().processimpls_id_get(id=ope.implementations[0])
+        impl = operation_verions_client.operationversions_id_get(id=ope.implementations[0])
         impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
         ope.implementation = impl
 
@@ -51,12 +72,22 @@ def operations(request):
 
 def instances(request, message_success=None):
     import json
-    from om_client.apis.process_instances_api import ProcessInstancesApi
-    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.instances_api import InstancesApi
+    from or_client.apis.operations_api import OperationsApi
 
-    instances_list = ProcessInstancesApi().process_instances_get()
+    # Create a client for OperationInstances
+    instances_client = InstancesApi()
+    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(instances_client, "admin", "pass")
+
+    # Create a client for Operations
+    operations_client = OperationsApi()
+    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operations_client, "admin", "pass")
+
+    instances_list = instances_client.instances_get()
     for instance in instances_list:
-        process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+        process = operations_client.operations_id_get(instance.process_definition_id)
         instance.process = process
         instance.logo_url = process.logo_url
         instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
@@ -70,17 +101,27 @@ def instances(request, message_success=None):
 
 def instances_operation(request, operation_id):
     import json
-    from om_client.apis.process_instances_api import ProcessInstancesApi
-    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.instances_api import InstancesApi
+    from or_client.apis.operations_api import OperationsApi
+
+    # Create a client for OperationInstances
+    instances_client = InstancesApi()
+    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(instances_client, "admin", "pass")
+
+    # Create a client for Operations
+    operations_client = OperationsApi()
+    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operations_client, "admin", "pass")
 
     # The parameters parsed from a URL are given as strings
     operation_id = int(operation_id)
 
-    instances_list = ProcessInstancesApi().process_instances_get()
+    instances_list = instances_client.instances_get()
     instances_list_operation = []
     for instance in instances_list:
         if instance.process_definition_id == operation_id:
-            process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+            process = operations_client.operations_id_get(instance.process_definition_id)
             instance.process = process
             instance.logo_url = process.logo_url
             instance.parameters = make_keyval_pairs(json.loads(instance.parameters))
@@ -93,14 +134,29 @@ def instances_operation(request, operation_id):
 
 
 def executions(request, message_success=None):
-    from om_client.apis.process_instances_api import ProcessInstancesApi
-    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from om_client.apis.instances_api import InstancesApi
     from om_client.apis.executions_api import ExecutionsApi
+    from or_client.apis.operations_api import OperationsApi
 
-    executions_list = ExecutionsApi().executions_get()
+    # Create a client for OperationInstances
+    instances_client = InstancesApi()
+    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(instances_client, "admin", "pass")
+
+    # Create a client for OperationExecutions
+    executions_client = ExecutionsApi()
+    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(executions_client, "admin", "pass")
+
+    # Create a client for Operations
+    operations_client = OperationsApi()
+    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operations_client, "admin", "pass")
+
+    executions_list = executions_client.executions_get()
     for execution in executions_list:
-        instance = ProcessInstancesApi().process_instances_id_get(execution.process_instance)
-        process = ProcessDefinitionsApi().processdefs_id_get(instance.process_definition_id)
+        instance = instances_client.instances_id_get(execution.operation_instance)
+        process = operations_client.operations_id_get(instance.process_definition_id)
         execution.instance = instance
         instance.process = process
 
@@ -118,9 +174,14 @@ def run_execution(request, execution_id):
 
 
 def instance_form(request, message_error=None):
-    from or_client.apis.process_definitions_api import ProcessDefinitionsApi
+    from or_client.apis.operations_api import OperationsApi
 
-    operations_list = ProcessDefinitionsApi().processdefs_get()
+    # Create a client for Operations
+    operations_client = OperationsApi()
+    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    configure_basic_authentication(operations_client, "admin", "pass")
+
+    operations_list = operations_client.operations_get()
 
     if request.GET.get('default_operation'):
         default_operation = int(request.GET.get('default_operation'))
@@ -133,8 +194,12 @@ def instance_form(request, message_error=None):
 
 
 def instance_post(request):
-    from om_client.apis.process_instances_api import ProcessInstancesApi
-    from om_client.configure import configure_auth_basic
+    from om_client.apis.instances_api import InstancesApi
+
+    # Create a client for OperationInstances
+    instances_client = InstancesApi()
+    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(instances_client, "admin", "pass")
 
     operation_id = request.POST.get('operation_id')
     name = request.POST.get('name')
@@ -148,9 +213,8 @@ def instance_post(request):
         "files": files
     }
 
-    configure_auth_basic("admin", "pass")
     try:
-        ret = ProcessInstancesApi().process_instances_post(data=request_data)
+        ret = instances_client.instances_post(data=request_data)
         instance_id = ret.id
         return instances(request, message_success="Successfully created instance #" + str(instance_id) + ".")
     except Exception as e:
@@ -158,9 +222,14 @@ def instance_post(request):
 
 
 def execution_form(request, message_error=None):
-    from om_client.apis.process_instances_api import ProcessInstancesApi
+    from om_client.apis.instances_api import InstancesApi
 
-    instances_list = ProcessInstancesApi().process_instances_get()
+    # Create a client for OperationInstances
+    instances_client = InstancesApi()
+    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(instances_client, "admin", "pass")
+
+    instances_list = instances_client.instances_get()
 
     if request.GET.get('default_instance'):
         default_instance = int(request.GET.get('default_instance'))
@@ -174,8 +243,12 @@ def execution_form(request, message_error=None):
 
 def execution_post(request):
     from om_client.apis.executions_api import ExecutionsApi
-    from om_client.configure import configure_auth_basic
     from rm_client.apis.users_api import UsersApi
+
+    # Create a client for OperationExecutions
+    executions_client = ExecutionsApi()
+    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(executions_client, "admin", "pass")
 
     # TODO: Remove hardcoded once the central authentication system in place
     token_ret = UsersApi().api_token_auth_post({"username": "admin", "password": "pass"})
@@ -186,7 +259,7 @@ def execution_post(request):
     force_spawn_cluster = request.POST.get('force_spawn_cluster')
 
     request_data = {
-        "process_instance": operation_instance,
+        "operation_instance": operation_instance,
         "resource_provisioner_token": token,
         "callback_url": callback_url,
     }
@@ -194,9 +267,8 @@ def execution_post(request):
     if force_spawn_cluster:
         request_data["force_spawn_cluster"] = force_spawn_cluster
 
-    configure_auth_basic("admin", "pass")
     try:
-        ret = ExecutionsApi().executions_post(data=request_data)
+        ret = executions_client.executions_post(data=request_data)
         execution_id = ret.id
 
         # Makes the instance run at creation
