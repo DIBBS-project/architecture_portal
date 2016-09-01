@@ -249,8 +249,8 @@ def operation_detail(request, operation_id):
     operation_versions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
-    operation_def = operations_client.processdefs_id_get(operation_id)
-    operation_impl = operation_versions_client.processimpls_id_get(operation_def.implementations[0])
+    operation_def = operations_client.operations_id_get(operation_id)
+    operation_impl = operation_versions_client.operationversions_id_get(operation_def.implementations[0])
 
     operation = {
         "name": operation_def.name,
