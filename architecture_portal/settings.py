@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -140,4 +139,12 @@ LOGGING = {
             'level':'DEBUG',
         }
     },
+}
+
+#
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
+        'my_app.authentication.ExampleAuthentication', # custom authentication class
+    ),
 }
