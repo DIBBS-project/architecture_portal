@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def credentials(request, message_success=None):
     from rm_client.apis.credentials_api import CredentialsApi
 
@@ -10,6 +12,7 @@ def credentials(request, message_success=None):
                                                 "message_success": message_success})
 
 
+@login_required
 def credentials_form(request, message_error=None):
     from ar_client.apis.sites_api import SitesApi
     from rm_client.apis.users_api import UsersApi
@@ -26,6 +29,7 @@ def credentials_form(request, message_error=None):
                                                      "message_error": message_error})
 
 
+@login_required
 def credentials_post(request):
     from rm_client.apis.credentials_api import CredentialsApi
     from rm_client.configure import configure_auth_basic

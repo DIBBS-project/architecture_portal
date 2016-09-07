@@ -49,7 +49,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common_app.auth.CentralAuthenticationMiddleware'
 ]
 
 ROOT_URLCONF = 'architecture_portal.urls'
@@ -143,8 +143,8 @@ LOGGING = {
 
 #
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : (
-        'my_app.authentication.ExampleAuthentication', # custom authentication class
-    ),
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES' : (
+#         'my_app.authentication.ExampleAuthentication', # custom authentication class
+#     ),
+# }

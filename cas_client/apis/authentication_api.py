@@ -68,6 +68,7 @@ class AuthenticationApi(object):
             for asynchronous request. (optional)
         :param str username: Username
         :param str password: Password
+        :param str session_key: session_key
         :return: AuthenticationResp
                  If the method is called asynchronously,
                  returns the request thread.
@@ -96,12 +97,13 @@ class AuthenticationApi(object):
             for asynchronous request. (optional)
         :param str username: Username
         :param str password: Password
+        :param str session_key: session_key
         :return: AuthenticationResp
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['username', 'password']
+        all_params = ['username', 'password', 'session_key']
         all_params.append('callback')
         all_params.append('_return_http_data_only')
 
@@ -123,6 +125,8 @@ class AuthenticationApi(object):
             query_params['username'] = params['username']
         if 'password' in params:
             query_params['password'] = params['password']
+        if 'session_key' in params:
+            query_params['session_key'] = params['session_key']
 
         header_params = {}
 

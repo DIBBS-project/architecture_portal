@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 
 import views
+from common_app import auth
 
 urlpatterns = [
     url(r'^credentials/$', views.credentials, name='credentials'),
     url(r'^credentials_form/$', views.credentials_form, name='credentials_form'),
     url(r'^credentials_post/$', views.credentials_post, name='credentials_post'),
+    # # CAS
+    # url(r'^accounts/login/$', auth.login, name='login'),
+    # url(r'^accounts/logout/$', auth.logout, name='logout'),
 ]

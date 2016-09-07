@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirection to authentication server</title>
+</head>
+<body>
+    <form action="{{ cas_service_target_url }}" method="POST">
+        <input type="hidden" name="session_key" value="{{ session_key }}">
+        <input type="hidden" name="redirect_url" value="{{ redirect_url }}">
+        <button type="submit">You will be redirected to the authentication server</button>
+    </form>
+</body>
+</html>
