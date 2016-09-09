@@ -165,10 +165,14 @@ def executions(request, message_success=None):
 
 
 def run_execution(request, execution_id):
-    import settings as global_settings
+    from om_client.apis.executions_api import ExecutionsApi
 
-    run_process_url = "%s/exec/%s/run/" % (global_settings.Settings().operation_manager_url, execution_id)
-    requests.get(run_process_url)
+    # Create a client for OperationExecutions
+    executions_client = ExecutionsApi()
+    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    configure_basic_authentication(executions_client, "admin", "pass")
+
+    result = executions_client.exec_id_run_get(execution_id)
 
     return HttpResponse({"status": "running"}, content_type='application/json')
 
@@ -286,7 +290,12 @@ def execution_post(request):
 def clusters(request):
     from rm_client.apis.cluster_definitions_api import ClusterDefinitionsApi
 
-    clusters_list = ClusterDefinitionsApi().clusters_get()
+    # Create a client for ClusterDefinitions
+    cluster_definitions_client = ClusterDefinitionsApi()
+    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+
+    clusters_list = cluster_definitions_client.clusters_get()
 
     def extract_app(app):
         return {"name": app["name"], "progress": int(app["progress"])}

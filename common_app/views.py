@@ -1,12 +1,27 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from settings import Settings
+import base64
+
+
+def configure_basic_authentication(swagger_client, username, password):
+    authentication_string = "%s:%s" % (username, password)
+    base64_authentication_string = base64.b64encode(bytes(authentication_string))
+    header_key = "Authorization"
+    header_value = "Basic %s" % (base64_authentication_string, )
+    swagger_client.api_client.default_headers[header_key] = header_value
 
 
 @login_required
 def credentials(request, message_success=None):
     from rm_client.apis.credentials_api import CredentialsApi
 
-    creds = CredentialsApi().credentials_get()
+    # Create a client for Credentials
+    credentials_client = CredentialsApi()
+    credentials_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(credentials_client, "admin", "pass")
+
+    creds = credentials_client.credentials_get()
 
     return render(request, "credentials.html", {"credentials_list": creds,
                                                 "message_success": message_success})
@@ -18,11 +33,21 @@ def credentials_form(request, message_error=None):
     from rm_client.apis.users_api import UsersApi
     import string
 
+    # Create a client for Users
+    users_client = UsersApi()
+    users_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(users_client, "admin", "pass")
+
+    # Create a client for Sites
+    sites_client = SitesApi()
+    sites_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(sites_client, "admin", "pass")
+
     # TODO: Remove hardcoded ID when central authentication system implemented
-    public_key = UsersApi().rsa_public_key_id_get(id=1).public_key
+    public_key = users_client.rsa_public_key_id_get(id=1).public_key
     public_key = string.replace(public_key, '\n', '\\n')
 
-    providers = SitesApi().sites_get()
+    providers = sites_client.sites_get()
 
     return render(request, "credentials_form.html", {"service_providers": providers,
                                                      "public_key": public_key,
@@ -42,9 +67,13 @@ def credentials_post(request):
         "credentials": encrypted_content
     }
 
-    configure_auth_basic("admin", "pass")
+    # Create a client for Credentials
+    credentials_client = CredentialsApi()
+    credentials_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(credentials_client, "admin", "pass")
+
     try:
-        ret = CredentialsApi().credentials_post(data=request_data)
+        ret = credentials_client.credentials_post(data=request_data)
         site_name = ret.site_name
         return credentials(request, message_success="Successfully created credentials for service \"" +
                                                     str(site_name) + "\".")

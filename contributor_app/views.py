@@ -39,7 +39,12 @@ def appliances(request, message_success=None):
     from ar_client.apis.appliances_api import AppliancesApi
     from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
 
-    appliances_list = AppliancesApi().appliances_get()
+    # Create a client for Appliances
+    appliances_client = AppliancesApi()
+    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliances_client, "admin", "pass")
+
+    appliances_list = appliances_client.appliances_get()
     appliances_list2 = []
     for app in appliances_list:
         impls = []
