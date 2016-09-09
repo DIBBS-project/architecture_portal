@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from contributor_app import views as contributor_views
+from common_dibbs.auth.auth import session_logout_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,4 +25,6 @@ urlpatterns = [
     url(r'^enduser/', include('enduser_app.urls')),
     url(r'^$', contributor_views.index, name='index'),
     url(r'^', include('common_app.urls')),
+
+    url(r'^session_logout/', session_logout_view, name="session_logout"),
 ]
