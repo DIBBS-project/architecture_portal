@@ -21,3 +21,4 @@ class Settings(object):
         self.resource_manager_url = "http://127.0.0.1:8002"
         self.operation_manager_agent_url = "http://127.0.0.1:8011"
         self.resource_manager_agent_url = "http://127.0.0.1:8012"
+        self.central_authentication_service_url = "http://127.0.0.1:7000"
