@@ -1,14 +1,14 @@
+import json
+
+from common_dibbs.misc import configure_basic_authentication
 from django.shortcuts import render
+
+from common_dibbs.clients.ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
+from common_dibbs.clients.ar_client.apis.appliances_api import AppliancesApi
+from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
+from common_dibbs.clients.or_client.apis.operation_versions_api import OperationVersionsApi
+from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
 from settings import Settings
-import base64
-
-
-def configure_basic_authentication(swagger_client, username, password):
-    authentication_string = "%s:%s" % (username, password)
-    base64_authentication_string = base64.b64encode(bytes(authentication_string))
-    header_key = "Authorization"
-    header_value = "Basic %s" % (base64_authentication_string, )
-    swagger_client.api_client.default_headers[header_key] = header_value
 
 
 def make_pairs(original_list):
@@ -17,7 +17,7 @@ def make_pairs(original_list):
     for i in range(0, len(original_list), 2):
         pair = dict()
         pair["first"] = original_list[i]
-        pair["second"] = original_list[i+1] if i+1 < len(original_list) else None
+        pair["second"] = original_list[i + 1] if i + 1 < len(original_list) else None
         pairs.append(pair)
     return pairs
 
@@ -36,20 +36,22 @@ def index(request):
 
 
 def appliances(request, message_success=None):
-    from ar_client.apis.appliances_api import AppliancesApi
-    from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
-
     # Create a client for Appliances
     appliances_client = AppliancesApi()
     appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
     configure_basic_authentication(appliances_client, "admin", "pass")
+
+    # Create a client for ApplianceImplementations
+    appliance_implementations_client = ApplianceImplementationsApi()
+    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
 
     appliances_list = appliances_client.appliances_get()
     appliances_list2 = []
     for app in appliances_list:
         impls = []
         for impl_name in app.implementations:
-            impl = ApplianceImplementationsApi().appliances_impl_name_get(name=impl_name)
+            impl = appliance_implementations_client.appliances_impl_name_get(name=impl_name)
             impls.append(impl)
 
         app.implementations = impls
@@ -63,10 +65,6 @@ def appliances(request, message_success=None):
 
 
 def operations(request, message_success=None):
-    from or_client.apis.operations_api import OperationsApi
-    from or_client.apis.operation_versions_api import OperationVersionsApi
-    import json
-
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
@@ -94,18 +92,18 @@ def operations(request, message_success=None):
 
 
 def operation_form(request, message_error=None):
-    from ar_client.apis.appliances_api import AppliancesApi
+    # Create a client for Appliances
+    appliances_client = AppliancesApi()
+    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliances_client, "admin", "pass")
 
-    appliances_list = AppliancesApi().appliances_get()
+    appliances_list = appliances_client.appliances_get()
 
     return render(request, "operation_form.html", {"appliances": appliances_list,
                                                    "message_error": message_error})
 
 
 def operation_post(request):
-    from or_client.apis.operations_api import OperationsApi
-    from or_client.apis.operation_versions_api import OperationVersionsApi
-
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
@@ -159,14 +157,10 @@ def operation_post(request):
 
 
 def appliance_form(request, message_error=None):
-
     return render(request, "appliance_form.html", {"message_error": message_error})
 
 
 def appliance_post(request):
-    from ar_client.apis.appliances_api import AppliancesApi
-    from ar_client.configure import configure_auth_basic
-
     name = request.POST.get('name')
     logo_url = request.POST.get('logo_url')
     description = request.POST.get('description')
@@ -177,9 +171,13 @@ def appliance_post(request):
         "description": description,
     }
 
-    configure_auth_basic("admin", "pass")
+    # Create a client for Appliances
+    appliances_client = AppliancesApi()
+    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliances_client, "admin", "pass")
+
     try:
-        ret = AppliancesApi().appliances_post(data=request_data)
+        ret = appliances_client.appliances_post(data=request_data)
         appliance_name = ret.name
         return appliances(request, message_success="Successfully created appliance '" + str(appliance_name) + "'.")
     except Exception as e:
@@ -187,11 +185,18 @@ def appliance_post(request):
 
 
 def appliance_implementation_form(request, message_error=None):
-    from ar_client.apis.appliances_api import AppliancesApi
-    from ar_client.apis.sites_api import SitesApi
+    # Create a client for Appliances
+    appliances_client = AppliancesApi()
+    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliances_client, "admin", "pass")
 
-    appliances_list = AppliancesApi().appliances_get()
-    sites_list = SitesApi().sites_get()
+    # Create a client for Sites
+    sites_client = SitesApi()
+    sites_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(sites_client, "admin", "pass")
+
+    appliances_list = appliances_client.appliances_get()
+    sites_list = sites_client.sites_get()
 
     default_appliance = request.GET.get('default_appliance')
 
@@ -202,9 +207,6 @@ def appliance_implementation_form(request, message_error=None):
 
 
 def appliance_implementation_post(request):
-    from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
-    from ar_client.configure import configure_auth_basic
-
     name = request.POST.get('name')
     logo_url = request.POST.get('logo_url')
     image_name = request.POST.get('image_name')
@@ -219,9 +221,13 @@ def appliance_implementation_post(request):
         "appliance": appliance,
     }
 
-    configure_auth_basic("admin", "pass")
+    # Create a client for ApplianceImplementations
+    appliance_implementations_client = ApplianceImplementationsApi()
+    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
+
     try:
-        ret = ApplianceImplementationsApi().appliances_impl_post(data=request_data)
+        ret = appliance_implementations_client.appliances_impl_post(data=request_data)
         appliance_impl_name = ret.name
         return appliances(
             request,
@@ -232,18 +238,17 @@ def appliance_implementation_post(request):
 
 
 def appliance_implementation_detail(request, appliance_impl_name):
-    from ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
+    # Create a client for ApplianceImplementations
+    appliance_implementations_client = ApplianceImplementationsApi()
+    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
 
-    appliance_impl = ApplianceImplementationsApi().appliances_impl_name_get(name=appliance_impl_name)
+    appliance_impl = appliance_implementations_client.appliances_impl_name_get(name=appliance_impl_name)
 
     return render(request, "appliance_implementation_detail.html", {"appliance_impl": appliance_impl})
 
 
 def operation_detail(request, operation_id):
-    import json
-    from or_client.apis.operations_api import OperationsApi
-    from or_client.apis.operation_versions_api import OperationVersionsApi
-
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)

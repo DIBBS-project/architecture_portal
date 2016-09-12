@@ -1,21 +1,17 @@
-from django.shortcuts import render
+import string
+
+from common_dibbs.misc import configure_basic_authentication
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
+from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
+from common_dibbs.clients.rm_client.apis.users_api import UsersApi
 from settings import Settings
-import base64
-
-
-def configure_basic_authentication(swagger_client, username, password):
-    authentication_string = "%s:%s" % (username, password)
-    base64_authentication_string = base64.b64encode(bytes(authentication_string))
-    header_key = "Authorization"
-    header_value = "Basic %s" % (base64_authentication_string, )
-    swagger_client.api_client.default_headers[header_key] = header_value
 
 
 @login_required
 def credentials(request, message_success=None):
-    from rm_client.apis.credentials_api import CredentialsApi
-
     # Create a client for Credentials
     credentials_client = CredentialsApi()
     credentials_client.api_client.host = "%s" % (Settings().resource_manager_url,)
@@ -29,10 +25,6 @@ def credentials(request, message_success=None):
 
 @login_required
 def credentials_form(request, message_error=None):
-    from ar_client.apis.sites_api import SitesApi
-    from rm_client.apis.users_api import UsersApi
-    import string
-
     # Create a client for Users
     users_client = UsersApi()
     users_client.api_client.host = "%s" % (Settings().resource_manager_url,)
@@ -56,9 +48,6 @@ def credentials_form(request, message_error=None):
 
 @login_required
 def credentials_post(request):
-    from rm_client.apis.credentials_api import CredentialsApi
-    from rm_client.configure import configure_auth_basic
-
     service_provider = request.POST.get('service_provider')
     encrypted_content = request.POST.get('encrypted_content')
 
