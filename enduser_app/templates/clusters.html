@@ -14,6 +14,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Appliance</th>
+                                <th>Credential</th>
                                 <th>Nodes</th>
                                 <th>Deployment</th>
                                 <th>Executions</th>
@@ -26,6 +27,7 @@
                                 <td><b>{{ cluster.id }}</b></td>
                                 <td>{{ cluster.name }}</td>
                                 <td>{{ cluster.appliance }}</td>
+                                <td>{{ cluster.credential }}</td>
                                 <td>{{ cluster.number_of_nodes }} nodes:
                                     <ul>
                                         {% for ip in cluster.hosts_ips %}

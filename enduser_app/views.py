@@ -11,6 +11,7 @@ from common_dibbs.clients.or_client.apis.operation_versions_api import Operation
 from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
 from common_dibbs.clients.rm_client.apis.cluster_definitions_api import ClusterDefinitionsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
+from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
 from settings import Settings
 
 
@@ -207,7 +208,13 @@ def execution_form(request, message_error=None):
     instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
     configure_basic_authentication(instances_client, "admin", "pass")
 
+    # Create a client for Credentials
+    credentials_client = CredentialsApi()
+    credentials_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(credentials_client, "admin", "pass")
+
     instances_list = instances_client.instances_get()
+    credentials_list = credentials_client.credentials_get()
 
     if request.GET.get('default_instance'):
         default_instance = int(request.GET.get('default_instance'))
@@ -216,7 +223,8 @@ def execution_form(request, message_error=None):
 
     return render(request, "execution_form.html", {"instances": instances_list,
                                                    "default_instance": default_instance,
-                                                   "message_error": message_error})
+                                                   "message_error": message_error,
+                                                   "credentials": credentials_list})
 
 
 def execution_post(request):
@@ -237,12 +245,18 @@ def execution_post(request):
     operation_instance = request.POST.get('operation_instance')
     callback_url = request.POST.get('callback_url')
     force_spawn_cluster = request.POST.get('force_spawn_cluster')
+    hint = request.POST.get('credential')
 
     request_data = {
         "operation_instance": operation_instance,
         "resource_provisioner_token": token,
         "callback_url": callback_url,
     }
+
+    if hint is not None and hint != "Random":
+        request_data["hints"] = """{"credentials": ["%s"]}""" % (hint)
+    else:
+        request_data["hints"] = """{"credentials": ["*"]}""" % (hint)
 
     if force_spawn_cluster:
         request_data["force_spawn_cluster"] = force_spawn_cluster

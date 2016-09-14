@@ -7,6 +7,15 @@
         {% csrf_token %}
 
         <div class="form-group">
+            <label for="operation_instance">Credential to use:</label>
+            <select class="form-control" name="credential" id="credential" required>
+                    <option value="*">Random</option>
+                {% for credential in credentials %}
+                    <option value="{{ credential.name }}">{{ credential.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
             <label for="operation_instance">Operation Instance:</label>
             <select class="form-control" name="operation_instance" id="operation_instance" required>
                 {% for instance in instances %}
