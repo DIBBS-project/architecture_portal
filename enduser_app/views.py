@@ -1,6 +1,7 @@
 import json
 
 import requests
+from django.shortcuts import redirect
 from common_dibbs.misc import configure_basic_authentication
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -10,6 +11,7 @@ from common_dibbs.clients.om_client.apis.instances_api import InstancesApi
 from common_dibbs.clients.or_client.apis.operation_versions_api import OperationVersionsApi
 from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
 from common_dibbs.clients.rm_client.apis.cluster_definitions_api import ClusterDefinitionsApi
+from common_dibbs.clients.rm_client.apis.host_definitions_api import HostDefinitionsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
 from settings import Settings
@@ -137,9 +139,14 @@ def executions(request, message_success=None):
     configure_basic_authentication(operations_client, "admin", "pass")
 
     executions_list = executions_client.executions_get()
+    instances_list = instances_client.instances_get()
+    processes_list = operations_client.operations_get()
+
     for execution in executions_list:
-        instance = instances_client.instances_id_get(execution.operation_instance)
-        process = operations_client.operations_id_get(instance.process_definition_id)
+        instance_candidates = filter(lambda i: i.id == execution.operation_instance, instances_list)
+        instance = instance_candidates[0] if instance_candidates else None
+        process_candidates = filter(lambda e: instance is not None and e.id == instance.process_definition_id, processes_list)
+        process = process_candidates[0] if process_candidates else None
         execution.instance = instance
         instance.process = process
 
@@ -303,3 +310,45 @@ def clusters(request):
     # operations_pairs = make_pairs(operations_list)
 
     return render(request, "clusters.html", {"clusters_list": clusters_list})
+
+
+def cluster_delete(request, cluster_id):
+    # Create a client for ClusterDefinitions
+    cluster_definitions_client = ClusterDefinitionsApi()
+    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+
+    cluster_definitions_client.clusters_id_delete(cluster_id)
+
+    return redirect("enduser_clusters")
+
+
+def cluster_add_node(request, cluster_id):
+    # Create a client for HostDefinitions
+    host_definitions_client = HostDefinitionsApi()
+    host_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(host_definitions_client, "admin", "pass")
+
+    host_definitions_client.hosts_post({"cluster_id": cluster_id})
+
+    return redirect("enduser_clusters")
+
+
+def cluster_remove_node(request, cluster_id):
+    # Create a client for ClusterDefinitions
+    cluster_definitions_client = ClusterDefinitionsApi()
+    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+
+    # Create a client for HostDefinitions
+    host_definitions_client = HostDefinitionsApi()
+    host_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(host_definitions_client, "admin", "pass")
+
+    cluster = cluster_definitions_client.clusters_id_get(cluster_id)
+
+    slaves_ids = filter(lambda h: str(h) != str(cluster.master_node_id), cluster.hosts_ids)
+    if len(slaves_ids) > 0:
+        host_definitions_client.hosts_id_delete(slaves_ids[0])
+
+    return redirect("enduser_clusters")

@@ -31,4 +31,7 @@ urlpatterns = [
     url(r'^execution_form/$', views.execution_form, name='enduser_execution_form'),
     url(r'^execution_post/$', views.execution_post, name='enduser_execution_post'),
     url(r'^clusters/$', views.clusters, name='enduser_clusters'),
+    url(r'^cluster_delete/(?P<cluster_id>[0-9]+)$', views.cluster_delete, name='enduser_cluster_delete'),
+    url(r'^cluster_add_node/(?P<cluster_id>[0-9]+)$', views.cluster_add_node, name='enduser_cluster_add_node'),
+    url(r'^cluster_remove_node/(?P<cluster_id>[0-9]+)$', views.cluster_remove_node, name='enduser_cluster_remove_node'),
 ]

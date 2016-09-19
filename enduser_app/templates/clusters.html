@@ -1,6 +1,6 @@
 {% extends "base_enduser.html" %}
 
-{% block navbar_title %}{{ block.super }} >> Appliances Dashboard{% endblock %}
+{% block navbar_title %}{{ block.super }} >> Clusters Dashboard{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -61,7 +61,22 @@
                                     No executions
                                     {% endif %}
                                 </td>
-                                <td>-</td>
+                                <td>
+                                    <div class="btn-group-vertical" role="group" aria-label="...">
+                                        <a href="{% url "enduser_cluster_delete" cluster.id %}" type="button"
+                                           class="btn btn-default btn-danger btn-sm" style="text-align: left">
+                                            <span class="glyphicon glyphicon-remove"></span> Delete cluster
+                                        </a>
+                                        <a href="{% url "enduser_cluster_add_node" cluster.id %}" type="button"
+                                           class="btn btn-default btn-sm" style="text-align: left">
+                                            <span class="glyphicon glyphicon-plus"></span> Add a node
+                                        </a>
+                                        <a href="{% url "enduser_cluster_remove_node" cluster.id %}" type="button"
+                                           class="btn btn-default btn-sm" style="text-align: left">
+                                            <span class="glyphicon glyphicon-minus"></span> Remove a node
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
