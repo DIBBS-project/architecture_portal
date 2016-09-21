@@ -141,6 +141,7 @@ LOGGING = {
     },
 }
 
+# SESSION_ENGINE = 'common_app.session_backend'
 #
 
 # REST_FRAMEWORK = {
