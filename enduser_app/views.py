@@ -304,6 +304,7 @@ def clusters(request):
         except:
             executions = []
         running_executions = filter(lambda x: x["progress"] < 100, executions)
+
         cluster.running_executions = running_executions
         cluster.number_of_nodes = len(cluster.hosts_ips)
 
@@ -324,12 +325,12 @@ def cluster_delete(request, cluster_id):
 
 
 def cluster_add_node(request, cluster_id):
-    # Create a client for HostDefinitions
-    host_definitions_client = HostDefinitionsApi()
-    host_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
-    configure_basic_authentication(host_definitions_client, "admin", "pass")
+    # Create a client for ClusterDefinitions
+    cluster_definitions_client = ClusterDefinitionsApi()
+    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
-    host_definitions_client.hosts_post({"cluster_id": cluster_id})
+    cluster_definitions_client.clusters_id_add_host_post(cluster_id)
 
     return redirect("enduser_clusters")
 
@@ -340,15 +341,6 @@ def cluster_remove_node(request, cluster_id):
     cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
     configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
-    # Create a client for HostDefinitions
-    host_definitions_client = HostDefinitionsApi()
-    host_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
-    configure_basic_authentication(host_definitions_client, "admin", "pass")
-
-    cluster = cluster_definitions_client.clusters_id_get(cluster_id)
-
-    slaves_ids = filter(lambda h: str(h) != str(cluster.master_node_id), cluster.hosts_ids)
-    if len(slaves_ids) > 0:
-        host_definitions_client.hosts_id_delete(slaves_ids[0])
+    cluster_definitions_client.clusters_id_remove_host_post(cluster_id)
 
     return redirect("enduser_clusters")
