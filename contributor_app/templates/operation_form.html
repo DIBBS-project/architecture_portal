@@ -3,7 +3,11 @@
 {% block navbar_title %}{{ block.super }} >> New Operation{% endblock %}
 
 {% block content %}
-    <form role="form" action="{% url 'contributor_operation_post' %}" method="post">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="http://parsleyjs.org/dist/parsley.min.js"></script>
+    <link href="http://parsleyjs.org/src/parsley.css" rel="stylesheet">
+
+    <form role="form" action="{% url 'contributor_operation_post' %}" method="post" data-parsley-validate="">
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Name:</label>
@@ -19,11 +23,11 @@
         </div>
         <div class="form-group">
             <label for="string_parameters">String parameters (JSON unordered list):</label>
-            <textarea class="form-control" rows="5" cols="50" id="string_parameters" name="string_parameters" placeholder='[ "param1", "param2" ]'></textarea>
+            <textarea class="form-control" rows="5" cols="50" id="string_parameters" required="" name="string_parameters" data-parsley-json="3" placeholder='[ "param1", "param2" ]'>[]</textarea>
         </div>
         <div class="form-group">
             <label for="file_parameters">File parameters (JSON unordered list):</label>
-            <textarea class="form-control" rows="5" cols="50" id="file_parameters" name="file_parameters" placeholder='[ "file1", "file2" ]'></textarea>
+            <textarea class="form-control" rows="5" cols="50" id="file_parameters" name="file_parameters" data-parsley-json="3" required="" placeholder='[ "file1", "file2" ]'>[]</textarea>
         </div>
         <div class="form-group">
             <label for="appliance">Appliance:</label>
@@ -41,7 +45,7 @@
         </div>
         <div class="form-group">
             <label for="script">Script:</label>
-            <textarea class="form-control" rows="5" cols="50" id="script" name="script"></textarea>
+            <textarea class="form-control" rows="5" cols="50" required="" id="script" name="script"></textarea>
         </div>
         <div class="form-group">
             <label for="output_type">Output type:</label>
@@ -51,8 +55,38 @@
         </div>
         <div class="form-group">
             <label for="output_parameters">Output parameters (JSON dictionary):</label>
-            <textarea class="form-control" rows="5" cols="50" id="output_parameters" name="output_parameters"></textarea>
+            <textarea class="form-control" rows="5" cols="50" id="output_parameters" data-parsley-dictjson="3" placeholder='[ "file1", "file2" ]' name="output_parameters">{}</textarea>
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
+
+    <script type="text/javascript">
+    window.Parsley.addValidator('json', {
+        validateString: function(value) {
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        },
+        messages: {
+            en: 'The value should be a valid JSON string as <code>[ "param1", "param2" ]</code>',
+        }
+    });
+
+    window.Parsley.addValidator('dictjson', {
+        validateString: function(value) {
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                return false;
+            }
+            return JSON.parse(value).constructor == {}.constructor;
+        },
+        messages: {
+            en: 'The value should be a valid JSON string as <code>{"key": "value"}</code>',
+        }
+    });
+    </script>
 {% endblock %}

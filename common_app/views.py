@@ -53,7 +53,8 @@ def credentials_post(request):
 
     request_data = {
         "site_name": service_provider,
-        "credentials": encrypted_content
+        "credentials": encrypted_content,
+        "name": "%s_%s" % (request.user.username, service_provider)
     }
 
     # Create a client for Credentials

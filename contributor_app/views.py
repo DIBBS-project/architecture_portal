@@ -1,4 +1,5 @@
 import json
+import logging
 
 from common_dibbs.misc import configure_basic_authentication
 from django.shortcuts import render
@@ -78,9 +79,13 @@ def operations(request, message_success=None):
     operations_list = operations_client.operations_get()
 
     for ope in operations_list:
-        impl = operation_versions_client.operationversions_id_get(id=ope.implementations[0])
-        impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
-        ope.implementation = impl
+        if ope.implementations:
+            impl = operation_versions_client.operationversions_id_get(id=ope.implementations[0])
+            try:
+                impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
+            except:
+                logging.error("Could make keyval_pairs from this JSON string: '%s'" % (impl.output_parameters))
+            ope.implementation = impl
 
         ope.string_parameters = json.loads(ope.string_parameters)
         ope.file_parameters = json.loads(ope.file_parameters)
@@ -125,6 +130,12 @@ def operation_post(request):
     output_type = request.POST.get('output_type')
     output_parameters = request.POST.get('output_parameters')
 
+    if string_parameters == "":
+        string_parameters = []
+
+    if file_parameters == "":
+        string_parameters = []
+
     definition_request_data = {
         "name": name,
         "logo_url": logo_url,
@@ -134,7 +145,17 @@ def operation_post(request):
     }
 
     try:
-        ret = operations_client.processdefs_post(data=definition_request_data)
+        json.loads(string_parameters)
+    except Exception as e:
+        return operation_form(request, message_error="Error creating the operation definition: String parameters must be in JSON format")
+
+    try:
+        json.loads(file_parameters)
+    except Exception as e:
+        return operation_form(request, message_error="Error creating the operation definition: File parameters must be in JSON format")
+
+    try:
+        ret = operations_client.operations_post(data=definition_request_data)
         operation_id = ret.id
     except Exception as e:
         return operation_form(request, message_error="Error creating the operation definition: " + str(e))
@@ -142,7 +163,7 @@ def operation_post(request):
     implementation_request_data = {
         "name": name + "_impl",
         "appliance": appliance,
-        "process_definition": operation_id,
+        "operation": operation_id,
         "cwd": cwd,
         "script": script,
         "output_type": output_type,
@@ -150,7 +171,7 @@ def operation_post(request):
     }
 
     try:
-        operation_versions_client.processimpls_post(data=implementation_request_data)
+        operation_versions_client.operationversions_post(data=implementation_request_data)
         return operations(request, message_success="Successfully created operation #" + str(operation_id) + ".")
     except Exception as e:
         return operation_form(request, message_error="Error creating the operation implementation: " + str(e))
@@ -260,20 +281,34 @@ def operation_detail(request, operation_id):
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
     operation_def = operations_client.operations_id_get(operation_id)
-    operation_impl = operation_versions_client.operationversions_id_get(operation_def.implementations[0])
+
+    if operation_def.implementations:
+        operation_impl = operation_versions_client.operationversions_id_get(operation_def.implementations[0])
+
+        appliance = operation_impl.appliance
+        cwd = operation_impl.cwd
+        script = operation_impl.script
+        output_type = operation_impl.name
+        output_parameters = make_keyval_pairs(json.loads(operation_impl.output_parameters))
+    else:
+        appliance = None
+        cwd = None
+        script = None
+        output_type = None
+        output_parameters = None
 
     operation = {
         "name": operation_def.name,
         "logo_url": operation_def.logo_url,
         "id": operation_def.id,
-        "appliance": operation_impl.appliance,
+        "appliance": appliance,
         "description": operation_def.description,
         "string_parameters": json.loads(operation_def.string_parameters),
         "file_parameters": json.loads(operation_def.file_parameters),
-        "cwd": operation_impl.cwd,
-        "script": operation_impl.script,
-        "output_type": operation_impl.name,
-        "output_parameters": make_keyval_pairs(json.loads(operation_impl.output_parameters)),
+        "cwd": cwd,
+        "script": script,
+        "output_type": output_type,
+        "output_parameters": output_parameters,
     }
 
     return render(request, "operation_detail.html", {"operation": operation})

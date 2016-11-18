@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 from django.shortcuts import redirect
@@ -55,9 +56,13 @@ def operations(request):
     operations_list = operations_client.operations_get()
 
     for ope in operations_list:
-        impl = operation_versions_client.operationversions_id_get(id=ope.implementations[0])
-        impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
-        ope.implementation = impl
+        if ope.implementations:
+            impl = operation_versions_client.operationversions_id_get(id=ope.implementations[0])
+            try:
+                impl.output_parameters = make_keyval_pairs(json.loads(impl.output_parameters))
+            except:
+                logging.error("Could make keyval_pairs from this JSON string: '%s'" % (impl.output_parameters))
+            ope.implementation = impl
 
         ope.string_parameters = json.loads(ope.string_parameters)
         ope.file_parameters = json.loads(ope.file_parameters)
