@@ -259,17 +259,30 @@ def execution_post(request):
     force_spawn_cluster = request.POST.get('force_spawn_cluster')
     hint = request.POST.get('credential')
     lease_id = request.POST.get('lease_id')
+    slave_nodes_count = request.POST.get('slave_nodes_count')
+
+    if not slave_nodes_count:
+        slave_nodes_count = 2
 
     request_data = {
         "operation_instance": operation_instance,
         "resource_provisioner_token": token,
         "callback_url": callback_url,
+        "slave_nodes_count": slave_nodes_count
     }
 
     if hint is not None and hint != "Random":
-        request_data["hints"] = """{"credentials": ["%s"], "lease_id": "%s"}""" % (hint, lease_id)
+        request_data["hints"] = """{
+                    "credentials": ["%s"],
+                    "lease_id": "%s",
+                    "slave_nodes_count": %s
+        }""" % (hint, lease_id, slave_nodes_count)
     else:
-        request_data["hints"] = """{"credentials": ["*"], "lease_id": "%s"}""" % (hint, lease_id)
+        request_data["hints"] = """{
+            "credentials": ["*"],
+            "lease_id": "%s",
+            "slave_nodes_count": %s
+        }""" % (hint, lease_id, slave_nodes_count)
 
     if force_spawn_cluster:
         request_data["force_spawn_cluster"] = force_spawn_cluster
