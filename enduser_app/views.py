@@ -1,11 +1,15 @@
+# coding: utf-8
+from __future__ import absolute_import, print_function
+
 import json
 import logging
+import threading
+import time
 
-import requests
-from django.shortcuts import redirect
-from common_dibbs.misc import configure_basic_authentication
+from django.conf import settings
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from django.shortcuts import render
+import requests
 
 from common_dibbs.clients.om_client.apis.executions_api import ExecutionsApi
 from common_dibbs.clients.om_client.apis.instances_api import InstancesApi
@@ -15,7 +19,7 @@ from common_dibbs.clients.rm_client.apis.cluster_definitions_api import ClusterD
 from common_dibbs.clients.rm_client.apis.host_definitions_api import HostDefinitionsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
-from settings import Settings
+from common_dibbs.misc import configure_basic_authentication
 
 
 def make_pairs(original_list):
@@ -45,12 +49,12 @@ def index(request):
 def operations(request):
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
-    operation_versions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
     operations_list = operations_client.operations_get()
@@ -75,12 +79,12 @@ def operations(request):
 def instances(request, message_success=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
-    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    instances_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(instances_client, "admin", "pass")
 
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     instances_list = instances_client.instances_get()
@@ -100,12 +104,12 @@ def instances(request, message_success=None):
 def instances_operation(request, operation_id):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
-    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    instances_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(instances_client, "admin", "pass")
 
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     # The parameters parsed from a URL are given as strings
@@ -130,17 +134,17 @@ def instances_operation(request, operation_id):
 def executions(request, message_success=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
-    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    instances_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(instances_client, "admin", "pass")
 
     # Create a client for OperationExecutions
     executions_client = ExecutionsApi()
-    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    executions_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(executions_client, "admin", "pass")
 
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     executions_list = executions_client.executions_get()
@@ -162,7 +166,7 @@ def executions(request, message_success=None):
 def run_execution(request, execution_id):
     # Create a client for OperationExecutions
     executions_client = ExecutionsApi()
-    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    executions_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(executions_client, "admin", "pass")
 
     result = executions_client.exec_id_run_get(execution_id)
@@ -173,7 +177,7 @@ def run_execution(request, execution_id):
 def instance_form(request, message_error=None):
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     operations_list = operations_client.operations_get()
@@ -191,7 +195,7 @@ def instance_form(request, message_error=None):
 def instance_post(request):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
-    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    instances_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(instances_client, "admin", "pass")
 
     operation_id = request.POST.get('operation_id')
@@ -217,12 +221,12 @@ def instance_post(request):
 def execution_form(request, message_error=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
-    instances_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    instances_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(instances_client, "admin", "pass")
 
     # Create a client for Credentials
     credentials_client = CredentialsApi()
-    credentials_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    credentials_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(credentials_client, "admin", "pass")
 
     instances_list = instances_client.instances_get()
@@ -242,13 +246,13 @@ def execution_form(request, message_error=None):
 def execution_post(request):
     # Create a client for OperationExecutions
     executions_client = ExecutionsApi()
-    executions_client.api_client.host = "%s" % (Settings().operation_manager_url,)
+    executions_client.api_client.host = settings.DIBBS['urls']['om']
     configure_basic_authentication(executions_client, "admin", "pass")
 
     # TODO: Remove hardcoded once the central authentication system in place
     # Create a client for Users
     users_client = UsersApi()
-    users_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    users_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(users_client, "admin", "pass")
 
     token_ret = users_client.api_token_auth_post({"username": "admin", "password": "pass"})
@@ -292,8 +296,6 @@ def execution_post(request):
         execution_id = ret.id
 
         # Makes the instance run at creation
-        import threading
-        import time
         thr = threading.Thread(target=run_execution, args=(request, execution_id))
         thr.start()
         time.sleep(2)
@@ -306,7 +308,7 @@ def execution_post(request):
 def clusters(request):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
-    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
     clusters_list = cluster_definitions_client.clusters_get()
@@ -335,7 +337,7 @@ def clusters(request):
 def cluster_delete(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
-    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
     cluster_definitions_client.clusters_id_delete(cluster_id)
@@ -346,7 +348,7 @@ def cluster_delete(request, cluster_id):
 def cluster_add_node(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
-    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
     cluster_definitions_client.clusters_id_add_host_post(cluster_id)
@@ -357,7 +359,7 @@ def cluster_add_node(request, cluster_id):
 def cluster_remove_node(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
-    cluster_definitions_client.api_client.host = "%s" % (Settings().resource_manager_url,)
+    cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
     configure_basic_authentication(cluster_definitions_client, "admin", "pass")
 
     cluster_definitions_client.clusters_id_remove_host_post(cluster_id)

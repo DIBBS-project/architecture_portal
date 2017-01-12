@@ -149,3 +149,16 @@ LOGGING = {
 #         'my_app.authentication.ExampleAuthentication', # custom authentication class
 #     ),
 # }
+
+# FIXME: load this from some file that can be distributed across services
+DIBBS = {
+    'urls': {
+        'cas': 'http://127.0.0.1:7000',
+        'or': "http://127.0.0.1:8000",
+        'om': "http://127.0.0.1:8001",
+        'rm': "http://127.0.0.1:8002",
+        'ar': "http://127.0.0.1:8003",
+        # 'oma': "http://127.0.0.1:8011",
+        # 'rma': "http://127.0.0.1:8012",
+    },
+}

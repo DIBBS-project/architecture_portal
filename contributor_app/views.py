@@ -1,7 +1,10 @@
+# coding: utf-8
+from __future__ import absolute_import, print_function
+
 import json
 import logging
 
-from common_dibbs.misc import configure_basic_authentication
+from django.conf import settings
 from django.shortcuts import render
 
 from common_dibbs.clients.ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
@@ -9,7 +12,7 @@ from common_dibbs.clients.ar_client.apis.appliances_api import AppliancesApi
 from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
 from common_dibbs.clients.or_client.apis.operation_versions_api import OperationVersionsApi
 from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
-from settings import Settings
+from common_dibbs.misc import configure_basic_authentication
 
 
 def make_pairs(original_list):
@@ -39,12 +42,12 @@ def index(request):
 def appliances(request, message_success=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
-    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliances_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliances_client, "admin", "pass")
 
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
-    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliance_implementations_client, "admin", "pass")
 
     appliances_list = appliances_client.appliances_get()
@@ -68,12 +71,12 @@ def appliances(request, message_success=None):
 def operations(request, message_success=None):
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
-    operation_versions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
     operations_list = operations_client.operations_get()
@@ -99,7 +102,7 @@ def operations(request, message_success=None):
 def operation_form(request, message_error=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
-    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliances_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliances_client, "admin", "pass")
 
     appliances_list = appliances_client.appliances_get()
@@ -111,12 +114,12 @@ def operation_form(request, message_error=None):
 def operation_post(request):
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
-    operation_versions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
     name = request.POST.get('name')
@@ -194,7 +197,7 @@ def appliance_post(request):
 
     # Create a client for Appliances
     appliances_client = AppliancesApi()
-    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliances_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliances_client, "admin", "pass")
 
     try:
@@ -208,12 +211,12 @@ def appliance_post(request):
 def appliance_implementation_form(request, message_error=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
-    appliances_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliances_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliances_client, "admin", "pass")
 
     # Create a client for Sites
     sites_client = SitesApi()
-    sites_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    sites_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(sites_client, "admin", "pass")
 
     appliances_list = appliances_client.appliances_get()
@@ -244,7 +247,7 @@ def appliance_implementation_post(request):
 
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
-    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliance_implementations_client, "admin", "pass")
 
     try:
@@ -261,7 +264,7 @@ def appliance_implementation_post(request):
 def appliance_implementation_detail(request, appliance_impl_name):
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
-    appliance_implementations_client.api_client.host = "%s" % (Settings().appliance_registry_url,)
+    appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
     configure_basic_authentication(appliance_implementations_client, "admin", "pass")
 
     appliance_impl = appliance_implementations_client.appliances_impl_name_get(name=appliance_impl_name)
@@ -272,12 +275,12 @@ def appliance_implementation_detail(request, appliance_impl_name):
 def operation_detail(request, operation_id):
     # Create a client for Operations
     operations_client = OperationsApi()
-    operations_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operations_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operations_client, "admin", "pass")
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
-    operation_versions_client.api_client.host = "%s" % (Settings().operation_registry_url,)
+    operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
     configure_basic_authentication(operation_versions_client, "admin", "pass")
 
     operation_def = operations_client.operations_id_get(operation_id)
