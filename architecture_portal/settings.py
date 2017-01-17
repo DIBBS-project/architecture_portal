@@ -49,7 +49,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'common_dibbs.auth.auth.CentralAuthenticationMiddleware'
+    'common_dibbs.CentralAuthenticationMiddleware',
+    'common_dibbs.DibbsUserMiddleware',
 ]
 
 ROOT_URLCONF = 'architecture_portal.urls'
