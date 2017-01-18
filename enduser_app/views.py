@@ -164,13 +164,7 @@ def executions(request, message_success=None):
 
 
 def run_execution(request, execution_id):
-    # Create a client for OperationExecutions
-    executions_client = ExecutionsApi()
-    executions_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(executions_client, "admin", "pass")
-
-    result = executions_client.exec_id_run_get(execution_id)
-
+    # the endpoint this went to didn't do anything.
     return HttpResponse({"status": "running"}, content_type='application/json')
 
 
