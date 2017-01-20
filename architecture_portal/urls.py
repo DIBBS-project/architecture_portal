@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from contributor_app import views as contributor_views
-from common_dibbs.auth.auth import session_logout_view
+from common_dibbs.auth import session_logout_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
