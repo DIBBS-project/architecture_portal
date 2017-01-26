@@ -12,7 +12,8 @@ from common_dibbs.clients.ar_client.apis.appliances_api import AppliancesApi
 from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
 from common_dibbs.clients.or_client.apis.operation_versions_api import OperationVersionsApi
 from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
-from common_dibbs.misc import configure_basic_authentication
+from common_dibbs.django import relay_swagger
+
 
 
 def make_pairs(original_list):
@@ -43,12 +44,12 @@ def appliances(request, message_success=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
     appliances_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliances_client, "admin", "pass")
+    relay_swagger(appliances_client, request)
 
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
     appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
+    relay_swagger(appliance_implementations_client, request)
 
     appliances_list = appliances_client.appliances_get()
     appliances_list2 = []
@@ -72,12 +73,12 @@ def operations(request, message_success=None):
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
     operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operation_versions_client, "admin", "pass")
+    relay_swagger(operation_versions_client, request)
 
     operations_list = operations_client.operations_get()
 
@@ -103,7 +104,7 @@ def operation_form(request, message_error=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
     appliances_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliances_client, "admin", "pass")
+    relay_swagger(appliances_client, request)
 
     appliances_list = appliances_client.appliances_get()
 
@@ -115,12 +116,12 @@ def operation_post(request):
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
     operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operation_versions_client, "admin", "pass")
+    relay_swagger(operation_versions_client, request)
 
     name = request.POST.get('name')
     logo_url = request.POST.get('logo_url')
@@ -198,7 +199,7 @@ def appliance_post(request):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
     appliances_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliances_client, "admin", "pass")
+    relay_swagger(appliances_client, request)
 
     try:
         ret = appliances_client.appliances_post(data=request_data)
@@ -212,12 +213,12 @@ def appliance_implementation_form(request, message_error=None):
     # Create a client for Appliances
     appliances_client = AppliancesApi()
     appliances_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliances_client, "admin", "pass")
+    relay_swagger(appliances_client, request)
 
     # Create a client for Sites
     sites_client = SitesApi()
     sites_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(sites_client, "admin", "pass")
+    relay_swagger(sites_client, request)
 
     appliances_list = appliances_client.appliances_get()
     sites_list = sites_client.sites_get()
@@ -248,7 +249,7 @@ def appliance_implementation_post(request):
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
     appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
+    relay_swagger(appliance_implementations_client, request)
 
     try:
         ret = appliance_implementations_client.appliances_impl_post(data=request_data)
@@ -265,7 +266,7 @@ def appliance_implementation_detail(request, appliance_impl_name):
     # Create a client for ApplianceImplementations
     appliance_implementations_client = ApplianceImplementationsApi()
     appliance_implementations_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(appliance_implementations_client, "admin", "pass")
+    relay_swagger(appliance_implementations_client, request)
 
     appliance_impl = appliance_implementations_client.appliances_impl_name_get(name=appliance_impl_name)
 
@@ -276,12 +277,12 @@ def operation_detail(request, operation_id):
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
     operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operation_versions_client, "admin", "pass")
+    relay_swagger(operation_versions_client, request)
 
     operation_def = operations_client.operations_id_get(operation_id)
 

@@ -8,7 +8,7 @@ from django.shortcuts import render
 from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
-from common_dibbs.misc import configure_basic_authentication
+from common_dibbs.django import relay_swagger
 
 
 @login_required
@@ -16,7 +16,7 @@ def credentials(request, message_success=None):
     # Create a client for Credentials
     credentials_client = CredentialsApi()
     credentials_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(credentials_client, "admin", "pass")
+    relay_swagger(credentials_client, request)
 
     creds = credentials_client.credentials_get()
 
@@ -29,12 +29,12 @@ def credentials_form(request, message_error=None):
     # Create a client for Users
     users_client = UsersApi()
     users_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(users_client, "admin", "pass")
+    relay_swagger(users_client, request)
 
     # Create a client for Sites
     sites_client = SitesApi()
     sites_client.api_client.host = settings.DIBBS['urls']['ar']
-    configure_basic_authentication(sites_client, "admin", "pass")
+    relay_swagger(sites_client, request)
 
     # TODO: Remove hardcoded ID when central authentication system implemented
     public_key = users_client.rsa_public_key_id_get(id=1).public_key
@@ -61,7 +61,7 @@ def credentials_post(request):
     # Create a client for Credentials
     credentials_client = CredentialsApi()
     credentials_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(credentials_client, "admin", "pass")
+    relay_swagger(credentials_client, request)
 
     try:
         ret = credentials_client.credentials_post(data=request_data)

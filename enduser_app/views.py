@@ -19,7 +19,8 @@ from common_dibbs.clients.rm_client.apis.cluster_definitions_api import ClusterD
 from common_dibbs.clients.rm_client.apis.host_definitions_api import HostDefinitionsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
-from common_dibbs.misc import configure_basic_authentication
+from common_dibbs.django import relay_swagger
+
 
 
 def make_pairs(original_list):
@@ -50,12 +51,12 @@ def operations(request):
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     # Create a client for OperationVersions
     operation_versions_client = OperationVersionsApi()
     operation_versions_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operation_versions_client, "admin", "pass")
+    relay_swagger(operation_versions_client, request)
 
     operations_list = operations_client.operations_get()
 
@@ -80,12 +81,12 @@ def instances(request, message_success=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
     instances_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(instances_client, "admin", "pass")
+    relay_swagger(instances_client, request)
 
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     instances_list = instances_client.instances_get()
     for instance in instances_list:
@@ -105,12 +106,12 @@ def instances_operation(request, operation_id):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
     instances_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(instances_client, "admin", "pass")
+    relay_swagger(instances_client, request)
 
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     # The parameters parsed from a URL are given as strings
     operation_id = int(operation_id)
@@ -135,17 +136,17 @@ def executions(request, message_success=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
     instances_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(instances_client, "admin", "pass")
+    relay_swagger(instances_client, request)
 
     # Create a client for OperationExecutions
     executions_client = ExecutionsApi()
     executions_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(executions_client, "admin", "pass")
+    relay_swagger(executions_client, request)
 
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     executions_list = executions_client.executions_get()
     instances_list = instances_client.instances_get()
@@ -172,7 +173,7 @@ def instance_form(request, message_error=None):
     # Create a client for Operations
     operations_client = OperationsApi()
     operations_client.api_client.host = settings.DIBBS['urls']['or']
-    configure_basic_authentication(operations_client, "admin", "pass")
+    relay_swagger(operations_client, request)
 
     operations_list = operations_client.operations_get()
 
@@ -190,7 +191,7 @@ def instance_post(request):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
     instances_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(instances_client, "admin", "pass")
+    relay_swagger(instances_client, request)
 
     operation_id = request.POST.get('operation_id')
     name = request.POST.get('name')
@@ -216,12 +217,12 @@ def execution_form(request, message_error=None):
     # Create a client for OperationInstances
     instances_client = InstancesApi()
     instances_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(instances_client, "admin", "pass")
+    relay_swagger(instances_client, request)
 
     # Create a client for Credentials
     credentials_client = CredentialsApi()
     credentials_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(credentials_client, "admin", "pass")
+    relay_swagger(credentials_client, request)
 
     instances_list = instances_client.instances_get()
     credentials_list = credentials_client.credentials_get()
@@ -241,13 +242,13 @@ def execution_post(request):
     # Create a client for OperationExecutions
     executions_client = ExecutionsApi()
     executions_client.api_client.host = settings.DIBBS['urls']['om']
-    configure_basic_authentication(executions_client, "admin", "pass")
+    relay_swagger(executions_client, request)
 
     # TODO: Remove hardcoded once the central authentication system in place
     # Create a client for Users
     users_client = UsersApi()
     users_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(users_client, "admin", "pass")
+    relay_swagger(users_client, request)
 
     token_ret = users_client.api_token_auth_post({"username": "admin", "password": "pass"})
     token = token_ret.token
@@ -303,7 +304,7 @@ def clusters(request):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
     cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+    relay_swagger(cluster_definitions_client, request)
 
     clusters_list = cluster_definitions_client.clusters_get()
 
@@ -332,7 +333,7 @@ def cluster_delete(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
     cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+    relay_swagger(cluster_definitions_client, request)
 
     cluster_definitions_client.clusters_id_delete(cluster_id)
 
@@ -343,7 +344,7 @@ def cluster_add_node(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
     cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+    relay_swagger(cluster_definitions_client, request)
 
     cluster_definitions_client.clusters_id_add_host_post(cluster_id)
 
@@ -354,7 +355,7 @@ def cluster_remove_node(request, cluster_id):
     # Create a client for ClusterDefinitions
     cluster_definitions_client = ClusterDefinitionsApi()
     cluster_definitions_client.api_client.host = settings.DIBBS['urls']['rm']
-    configure_basic_authentication(cluster_definitions_client, "admin", "pass")
+    relay_swagger(cluster_definitions_client, request)
 
     cluster_definitions_client.clusters_id_remove_host_post(cluster_id)
 
