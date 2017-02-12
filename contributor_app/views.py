@@ -5,15 +5,15 @@ import json
 import logging
 
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from common_dibbs.clients.ar_client.apis.appliance_implementations_api import ApplianceImplementationsApi
 from common_dibbs.clients.ar_client.apis.appliances_api import AppliancesApi
 from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
 from common_dibbs.clients.or_client.apis.operation_versions_api import OperationVersionsApi
 from common_dibbs.clients.or_client.apis.operations_api import OperationsApi
-from common_dibbs.django import relay_swagger
 
+from userproxy.clients import configure_swagger as relay_swagger
 
 
 def make_pairs(original_list):
@@ -36,7 +36,6 @@ def make_keyval_pairs(original_dictionary):
 
 
 def index(request):
-    from django.shortcuts import redirect
     return redirect('contributor_operations')
 
 

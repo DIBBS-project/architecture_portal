@@ -8,7 +8,8 @@ from django.shortcuts import render
 from common_dibbs.clients.ar_client.apis.sites_api import SitesApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
-from common_dibbs.django import relay_swagger
+
+from userproxy.clients import configure_swagger as relay_swagger
 
 
 @login_required

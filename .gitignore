@@ -3,6 +3,7 @@ tmp
 .idea
 db.sqlite3
 ap_app/migrations
+userproxy/migrations
 *.pyc
 
 # MAC OS
@@ -172,5 +173,3 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
-

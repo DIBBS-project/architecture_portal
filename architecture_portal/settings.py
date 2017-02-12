@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'userproxy',
     'contributor_app',
     'enduser_app',
     'common_app',
@@ -48,10 +49,14 @@ MIDDLEWARE_CLASSES = [
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'userproxy.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
 ROOT_URLCONF = 'architecture_portal.urls'
+
+LOGIN_URL = '/auth/login'
+LOGIN_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {

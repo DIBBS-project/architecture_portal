@@ -19,8 +19,8 @@ from common_dibbs.clients.rm_client.apis.cluster_definitions_api import ClusterD
 from common_dibbs.clients.rm_client.apis.host_definitions_api import HostDefinitionsApi
 from common_dibbs.clients.rm_client.apis.users_api import UsersApi
 from common_dibbs.clients.rm_client.apis.credentials_api import CredentialsApi
-from common_dibbs.django import relay_swagger
 
+from userproxy.clients import configure_swagger as relay_swagger
 
 
 def make_pairs(original_list):
